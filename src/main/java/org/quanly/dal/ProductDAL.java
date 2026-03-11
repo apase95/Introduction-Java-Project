@@ -40,4 +40,31 @@ public class ProductDAL {
         } catch (SQLException e) { return false; }
     }
 
+    public boolean update(ProductDTO p) {
+        String sql = "UPDATE Products SET product_name = ?, price = ?, quantity = ?, category_id = ? WHERE product_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setString(1, p.getName());
+            pst.setDouble(2, p.getPrice());
+            pst.setInt(3, p.getQuantity());
+            pst.setInt(4, p.getCategoryId());
+            pst.setInt(5, p.getId());
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean delete(int id) {
+        String sql = "DELETE FROM Products WHERE product_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setInt(1, id);
+            return pst.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
