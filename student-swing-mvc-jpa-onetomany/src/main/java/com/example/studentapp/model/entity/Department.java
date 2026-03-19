@@ -27,13 +27,17 @@ public class Department {
     public void setName(String name) { this.name = name; }
 
     public void addStudent(Student student) {
-        students.add(student);
-        students.setDepartment(this);
+        if (student != null) {
+            students.add(student);
+            student.setDepartment(this);
+        }
     }
 
     public void removeStudent(Student student) {
-        students.remove(student);
-        student.setDepartment(null);
+        if (student != null) {
+            students.remove(student);
+            student.setDepartment(null);
+        }
     }
 
     @Override
