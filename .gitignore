@@ -1,0 +1,7 @@
+# Ignore IDE and Build folders in all subprojects
+**/target/
+**/.idea/
+**/*.iml
+**/.settings/
+**/.project
+**/.classpath
