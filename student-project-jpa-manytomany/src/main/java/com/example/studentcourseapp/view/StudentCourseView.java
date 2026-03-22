@@ -1,7 +1,9 @@
 package com.example.studentcourseapp.view;
+
 import com.example.studentcourseapp.model.entity.Course;
 import javax.swing.*;
 import java.awt.*;
+
 public class StudentCourseView extends JFrame {
     private final JTextField txtId = new JTextField(10);
     private final JTextField txtName = new JTextField(20);
@@ -18,6 +20,7 @@ public class StudentCourseView extends JFrame {
     private final JButton btnTop5 = new JButton("Top 5 GPA");
     private final StudentTableModel tableModel = new StudentTableModel();
     private final JTable table = new JTable(tableModel);
+
     public StudentCourseView() {
         setTitle("Student - Course ManyToMany");
         setSize(1000, 600);
@@ -50,6 +53,7 @@ public class StudentCourseView extends JFrame {
         add(new JScrollPane(table), BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
     }
+
     public JTextField getTxtId() { return txtId; }
     public JTextField getTxtName() { return txtName; }
     public JTextField getTxtEmail() { return txtEmail; }
