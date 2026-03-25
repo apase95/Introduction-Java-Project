@@ -28,4 +28,57 @@ public class CustomerDAOImpl implements CustomerDAO {
             em.close();
         }
     }
+
+    @Override
+    public Customer save(Customer customer) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Customer saved;
+            if (customer.getId() == null) {
+                em.persist(customer);
+                saved = customer;
+            } else {
+                saved = em.merge(customer);
+            }
+            em.getTransaction().commit();
+            return saved;
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Customer c = em.find(Customer.class, id);
+            if (c != null) {
+                em.remove(c);
+            }
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Customer> searchByKeyword(String keyword) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            String kw = "%" + keyword.toLowerCase() + "%";
+            return em.createQuery("SELECT c FROM Customer c WHERE LOWER(c.customerCode) LIKE :kw OR LOWER(c.fullName) LIKE :kw", Customer.class)
+                    .setParameter("kw", kw)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
