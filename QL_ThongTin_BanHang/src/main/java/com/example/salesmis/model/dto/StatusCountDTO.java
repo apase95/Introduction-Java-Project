@@ -1,4 +1,5 @@
 package com.example.salesmis.model.dto;
 
-public class StatusCountDTO {
-}
+import com.example.salesmis.model.enumtype.OrderStatus;
+
+public record StatusCountDTO(OrderStatus status, Long totalOrders) {}

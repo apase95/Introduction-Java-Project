@@ -1,4 +1,8 @@
 package com.example.salesmis.model.enumtype;
 
-public class OrderStatus {
+public enum OrderStatus {
+    NEW,
+    CONFIRMED,
+    COMPLETED,
+    CANCELLED,
 }

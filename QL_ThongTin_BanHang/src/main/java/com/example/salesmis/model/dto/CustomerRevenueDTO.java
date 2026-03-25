@@ -1,4 +1,5 @@
 package com.example.salesmis.model.dto;
 
-public class CustomerRevenueDTO {
-}
+import java.math.BigDecimal;
+
+public record CustomerRevenueDTO(String customerCode, String customerName, BigDecimal revenue) {}
