@@ -1,6 +1,7 @@
 package com.example.salesmis;
 
 import com.example.salesmis.controller.OrderController;
+import com.example.salesmis.controller.ReportController;
 import com.example.salesmis.dao.CustomerDAO;
 import com.example.salesmis.dao.ProductDAO;
 import com.example.salesmis.dao.SalesOrderDAO;
@@ -13,6 +14,8 @@ import com.example.salesmis.service.impl.LookupServiceImpl;
 import com.example.salesmis.service.impl.OrderServiceImpl;
 import com.example.salesmis.view.MainFrame;
 import com.example.salesmis.view.OrderManagementPanel;
+import com.example.salesmis.view.ReportManagementPanel;
+
 import javax.swing.*;
 
 public class AppLauncher {
@@ -24,9 +27,13 @@ public class AppLauncher {
         LookupService lookupService = new LookupServiceImpl(customerDAO, productDAO);
         OrderService orderService = new OrderServiceImpl(salesOrderDAO, customerDAO, productDAO);
         OrderController orderController = new OrderController(orderService, lookupService);
+        ReportController reportController = new ReportController();
 
         SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame(new OrderManagementPanel(orderController));
+            MainFrame frame = new MainFrame(
+                new OrderManagementPanel(orderController), 
+                new ReportManagementPanel(reportController)
+            );
             frame.setVisible(true);
         });
     }
