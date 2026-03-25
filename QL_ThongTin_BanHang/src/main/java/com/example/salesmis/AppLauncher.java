@@ -1,17 +1,33 @@
 package com.example.salesmis;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import com.example.salesmis.controller.OrderController;
+import com.example.salesmis.dao.CustomerDAO;
+import com.example.salesmis.dao.ProductDAO;
+import com.example.salesmis.dao.SalesOrderDAO;
+import com.example.salesmis.dao.impl.CustomerDAOImpl;
+import com.example.salesmis.dao.impl.ProductDAOImpl;
+import com.example.salesmis.dao.impl.SalesOrderDAOImpl;
+import com.example.salesmis.service.LookupService;
+import com.example.salesmis.service.OrderService;
+import com.example.salesmis.service.impl.LookupServiceImpl;
+import com.example.salesmis.service.impl.OrderServiceImpl;
+import com.example.salesmis.view.MainFrame;
+import com.example.salesmis.view.OrderManagementPanel;
+import javax.swing.*;
+
 public class AppLauncher {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        CustomerDAO customerDAO = new CustomerDAOImpl();
+        ProductDAO productDAO = new ProductDAOImpl();
+        SalesOrderDAO salesOrderDAO = new SalesOrderDAOImpl();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        LookupService lookupService = new LookupServiceImpl(customerDAO, productDAO);
+        OrderService orderService = new OrderServiceImpl(salesOrderDAO, customerDAO, productDAO);
+        OrderController orderController = new OrderController(orderService, lookupService);
+
+        SwingUtilities.invokeLater(() -> {
+            MainFrame frame = new MainFrame(new OrderManagementPanel(orderController));
+            frame.setVisible(true);
+        });
     }
 }
