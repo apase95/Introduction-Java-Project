@@ -12,7 +12,10 @@ import com.example.salesmis.model.enumtype.OrderStatus;
 import com.example.salesmis.service.OrderService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OrderServiceImpl implements OrderService {
     private final SalesOrderDAO salesOrderDAO;
@@ -60,6 +63,26 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         order.setNote(note);
 
+        if (status == OrderStatus.COMPLETED) {
+            Map<Long, Integer> stockChanges = new HashMap<>();
+            for (OrderLineInput line : lines) {
+                stockChanges.put(line.getProductId(), stockChanges.getOrDefault(line.getProductId(), 0) - line.getQuantity());
+            }
+            List<Product> productsToUpdate = new ArrayList<>();
+            for (Map.Entry<Long, Integer> entry : stockChanges.entrySet()) {
+                Product p = productDAO.findById(entry.getKey())
+                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm id = " + entry.getKey()));
+                if (p.getStockQty() + entry.getValue() < 0) {
+                    throw new IllegalArgumentException("Sản phẩm " + p.getProductName() + " không đủ tồn kho.");
+                }
+                p.setStockQty(p.getStockQty() + entry.getValue());
+                productsToUpdate.add(p);
+            }
+            for (Product p : productsToUpdate) {
+                productDAO.save(p);
+            }
+        }
+
         BigDecimal total = BigDecimal.ZERO;
         for (OrderLineInput line : lines) {
             Product product = productDAO.findById(line.getProductId())
@@ -93,6 +116,38 @@ public class OrderServiceImpl implements OrderService {
             }
         });
 
+        Map<Long, Integer> stockChanges = new HashMap<>();
+
+        if (existing.getStatus() == OrderStatus.COMPLETED) {
+            for (OrderDetail oldDetail : existing.getOrderDetails()) {
+                Long pId = oldDetail.getProduct().getId();
+                stockChanges.put(pId, stockChanges.getOrDefault(pId, 0) + oldDetail.getQuantity());
+            }
+        }
+
+        if (status == OrderStatus.COMPLETED) {
+            for (OrderLineInput line : lines) {
+                Long pId = line.getProductId();
+                stockChanges.put(pId, stockChanges.getOrDefault(pId, 0) - line.getQuantity());
+            }
+        }
+
+        List<Product> productsToUpdate = new ArrayList<>();
+        for (Map.Entry<Long, Integer> entry : stockChanges.entrySet()) {
+            if (entry.getValue() == 0) continue;
+            Product p = productDAO.findById(entry.getKey())
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm id = " + entry.getKey()));
+            if (p.getStockQty() + entry.getValue() < 0) {
+                throw new IllegalArgumentException("Sản phẩm " + p.getProductName() + " không đủ tồn kho.");
+            }
+            p.setStockQty(p.getStockQty() + entry.getValue());
+            productsToUpdate.add(p);
+        }
+
+        for (Product p : productsToUpdate) {
+            productDAO.save(p);
+        }
+
         existing.setOrderNo(orderNo.trim());
         existing.setOrderDate(orderDate);
         existing.setCustomer(customer);
@@ -120,7 +175,21 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteOrder(Long id) {
-        getOrderById(id);
+        SalesOrder existing = getOrderById(id);
+        if (existing.getStatus() == OrderStatus.COMPLETED) {
+            Map<Long, Integer> stockChanges = new HashMap<>();
+            for (OrderDetail oldDetail : existing.getOrderDetails()) {
+                Long pId = oldDetail.getProduct().getId();
+                stockChanges.put(pId, stockChanges.getOrDefault(pId, 0) + oldDetail.getQuantity());
+            }
+            for (Map.Entry<Long, Integer> entry : stockChanges.entrySet()) {
+                Product p = productDAO.findById(entry.getKey()).orElse(null);
+                if (p != null) {
+                    p.setStockQty(p.getStockQty() + entry.getValue());
+                    productDAO.save(p);
+                }
+            }
+        }
         salesOrderDAO.deleteById(id);
     }
 
