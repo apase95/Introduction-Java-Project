@@ -1,12 +1,15 @@
 package com.example.salesmis.view;
 
+import com.example.salesmis.model.entity.Account;
+import com.example.salesmis.model.enumtype.AccountRole;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public MainFrame(OrderManagementPanel orderPanel, ReportManagementPanel reportPanel, 
+    public MainFrame(Account account, OrderManagementPanel orderPanel, ReportManagementPanel reportPanel, 
                      CustomerManagementPanel customerPanel, ProductManagementPanel productPanel) {
-        setTitle("MIS - Sales Management");
+        setTitle("MIS - Sales Management [" + account.getRole().name() + " : " + account.getUsername() + "]");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1300, 760);
         setLocationRelativeTo(null);
@@ -16,8 +19,11 @@ public class MainFrame extends JFrame {
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.addTab("Quản lý đơn hàng", orderPanel);
         tabbedPane.addTab("Quản lý khách hàng", customerPanel);
-        tabbedPane.addTab("Quản lý sản phẩm", productPanel);
-        tabbedPane.addTab("Báo cáo thống kê", reportPanel);
+
+        if (account.getRole() == AccountRole.ADMIN) {
+            tabbedPane.addTab("Quản lý sản phẩm", productPanel);
+            tabbedPane.addTab("Báo cáo thống kê", reportPanel);
+        }
 
         add(tabbedPane, BorderLayout.CENTER);
     }

@@ -40,9 +40,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void ensureDefaultAdminExists() {
-        if (accountDAO.countAccounts() == 0) {
+    public void ensureDefaultAccountsExist() {
+        if (accountDAO.findByUsername("admin").isEmpty()) {
             createAccount("admin", "123456", AccountRole.ADMIN);
+        }
+        if (accountDAO.findByUsername("staff").isEmpty()) {
+            createAccount("staff", "123456", AccountRole.STAFF);
         }
     }
 }

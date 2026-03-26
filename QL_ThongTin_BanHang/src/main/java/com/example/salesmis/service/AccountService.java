@@ -6,5 +6,5 @@ import com.example.salesmis.model.enumtype.AccountRole;
 public interface AccountService {
     Account login(String username, String password);
     Account createAccount(String username, String password, AccountRole role);
-    void ensureDefaultAdminExists();
+    void ensureDefaultAccountsExist();
 }

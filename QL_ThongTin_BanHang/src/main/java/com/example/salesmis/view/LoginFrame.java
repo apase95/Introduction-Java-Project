@@ -5,18 +5,19 @@ import com.example.salesmis.service.AccountService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class LoginFrame extends JFrame {
 
     private final AccountService accountService;
-    private final Runnable onSuccess;
+    private final Consumer<Account> onSuccess;
 
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JButton btnLogin;
     private JButton btnExit;
 
-    public LoginFrame(AccountService accountService, Runnable onSuccess) {
+    public LoginFrame(AccountService accountService, Consumer<Account> onSuccess) {
         this.accountService = accountService;
         this.onSuccess = onSuccess;
         initComponents();
@@ -82,7 +83,7 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công với quyền " + account.getRole() + "!");
             this.dispose(); 
             if (onSuccess != null) {
-                onSuccess.run();
+                onSuccess.accept(account);
             }
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Đăng nhập thất bại", JOptionPane.WARNING_MESSAGE);

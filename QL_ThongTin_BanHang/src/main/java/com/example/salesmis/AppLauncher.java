@@ -56,10 +56,11 @@ public class AppLauncher {
 
         SwingUtilities.invokeLater(() -> {
             try {
-                accountService.ensureDefaultAdminExists();
+                accountService.ensureDefaultAccountsExist();
 
-                LoginFrame loginFrame = new LoginFrame(accountService, () -> {
+                LoginFrame loginFrame = new LoginFrame(accountService, (loggedInAccount) -> {
                     MainFrame frame = new MainFrame(
+                        loggedInAccount,
                         new OrderManagementPanel(orderController), 
                         new ReportManagementPanel(reportController),
                         new CustomerManagementPanel(customerController),
