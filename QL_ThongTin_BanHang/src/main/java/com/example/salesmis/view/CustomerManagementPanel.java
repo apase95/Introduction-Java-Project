@@ -61,19 +61,26 @@ public class CustomerManagementPanel extends JPanel {
         topPanel.add(form, BorderLayout.NORTH);
 
         // Buttons
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
+
+        JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnNew = new JButton("Làm mới");
         JButton btnSave = new JButton("Thêm mới");
         JButton btnUpdate = new JButton("Cập nhật");
         JButton btnDelete = new JButton("Xóa");
-        JButton btnSearch = new JButton("Tìm");
+        leftButtons.add(btnNew);
+        leftButtons.add(btnSave);
+        leftButtons.add(btnUpdate);
+        leftButtons.add(btnDelete);
 
-        buttons.add(btnNew);
-        buttons.add(btnSave);
-        buttons.add(btnUpdate);
-        buttons.add(btnDelete);
-        buttons.add(txtSearch); txtSearch.setColumns(15);
-        buttons.add(btnSearch);
+        JPanel rightSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnSearch = new JButton("Tìm kiếm");
+        txtSearch.setColumns(15);
+        rightSearch.add(txtSearch);
+        rightSearch.add(btnSearch);
+
+        buttonsPanel.add(leftButtons, BorderLayout.WEST);
+        buttonsPanel.add(rightSearch, BorderLayout.EAST);
         
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveCustomer());
@@ -81,7 +88,7 @@ public class CustomerManagementPanel extends JPanel {
         btnDelete.addActionListener(e -> deleteCustomer());
         btnSearch.addActionListener(e -> searchCustomers());
 
-        topPanel.add(buttons, BorderLayout.SOUTH);
+        topPanel.add(buttonsPanel, BorderLayout.SOUTH);
         add(topPanel, BorderLayout.NORTH);
 
         // Table
@@ -145,14 +152,19 @@ public class CustomerManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Thêm KH thành công: " + c.getCustomerCode());
             clearForm();
             loadData();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi thêm KH: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void updateCustomer() {
         try {
-            if (selectedId == null) return;
+            if (selectedId == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để cập nhật.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             Customer c = customerController.updateCustomer(
                 selectedId, txtCode.getText().trim(), txtName.getText().trim(), txtPhone.getText().trim(),
                 txtEmail.getText().trim(), txtAddress.getText().trim(), chkActive.isSelected()
@@ -160,21 +172,26 @@ public class CustomerManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Cập nhật thành công: " + c.getCustomerCode());
             clearForm();
             loadData();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi cập nhật KH: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void deleteCustomer() {
         try {
-            if (selectedId == null) return;
-            if (JOptionPane.showConfirmDialog(this, "Xóa KH này?") == JOptionPane.YES_OPTION) {
+            if (selectedId == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng để xóa.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            if (JOptionPane.showConfirmDialog(this, "Xóa KH này?", "Xác nhận", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 customerController.deleteCustomer(selectedId);
                 clearForm();
                 loadData();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi xóa KH: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi xóa KH: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 

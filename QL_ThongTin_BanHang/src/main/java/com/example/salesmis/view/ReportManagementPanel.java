@@ -36,7 +36,9 @@ public class ReportManagementPanel extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout(8, 8));
         
-        JPanel form = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel formContainer = new JPanel(new BorderLayout());
+        
+        JPanel leftParams = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         
         String[] reportTypes = {
             "Tất cả đơn hàng kèm khách hàng",
@@ -63,15 +65,20 @@ public class ReportManagementPanel extends JPanel {
         txtParam2 = new JTextField(15);
         btnRunReport = new JButton("Thống kê / Báo cáo");
 
-        form.add(new JLabel("Loại báo cáo:"));
-        form.add(cboReportType);
-        form.add(lblParam1);
-        form.add(txtParam1);
-        form.add(lblParam2);
-        form.add(txtParam2);
-        form.add(btnRunReport);
+        leftParams.add(new JLabel("Loại báo cáo:"));
+        leftParams.add(cboReportType);
+        leftParams.add(lblParam1);
+        leftParams.add(txtParam1);
+        leftParams.add(lblParam2);
+        leftParams.add(txtParam2);
+        
+        JPanel rightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        rightButtons.add(btnRunReport);
 
-        topPanel.add(form, BorderLayout.NORTH);
+        formContainer.add(leftParams, BorderLayout.WEST);
+        formContainer.add(rightButtons, BorderLayout.EAST);
+
+        topPanel.add(formContainer, BorderLayout.NORTH);
         add(topPanel, BorderLayout.NORTH);
 
         tableModel = new DefaultTableModel() {
@@ -137,36 +144,49 @@ public class ReportManagementPanel extends JPanel {
 
     private void runReport() {
         int index = cboReportType.getSelectedIndex();
+        String p1 = txtParam1.getText().trim();
+        String p2 = txtParam2.getText().trim();
         try {
             switch (index) {
                 case 0:
                     displayOrders(reportController.q01_findAllOrdersWithCustomer());
                     break;
                 case 1:
-                    SalesOrder order = reportController.q02_findOrderByOrderNo(txtParam1.getText().trim());
+                    if (p1.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập mã đơn hàng.");
+                    SalesOrder order = reportController.q02_findOrderByOrderNo(p1);
                     displayOrders(order != null ? List.of(order) : List.of());
                     break;
                 case 2:
-                    displayOrders(reportController.q03_findOrdersByCustomerKeyword(txtParam1.getText().trim()));
+                    if (p1.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập tên khách hàng.");
+                    displayOrders(reportController.q03_findOrdersByCustomerKeyword(p1));
                     break;
                 case 3:
-                    LocalDate from = LocalDate.parse(txtParam1.getText().trim());
-                    LocalDate to = LocalDate.parse(txtParam2.getText().trim());
+                    if (p1.isEmpty() || p2.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập đầy đủ Từ ngày và Đến ngày.");
+                    LocalDate from = LocalDate.parse(p1);
+                    LocalDate to = LocalDate.parse(p2);
                     displayOrders(reportController.q04_findOrdersBetween(from, to));
                     break;
                 case 4:
-                    OrderStatus status = OrderStatus.valueOf(txtParam1.getText().trim().toUpperCase());
+                    if (p1.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập trạng thái.");
+                    OrderStatus status;
+                    try {
+                        status = OrderStatus.valueOf(p1.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("Trạng thái không hợp lệ. (NEW, CONFIRMED, COMPLETED, CANCELLED)");
+                    }
                     displayOrders(reportController.q05_findOrdersByStatus(status));
                     break;
                 case 5:
-                    int threshold = Integer.parseInt(txtParam1.getText().trim());
+                    if (p1.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập ngưỡng tồn kho.");
+                    int threshold = Integer.parseInt(p1);
                     displayProducts(reportController.q06_findLowStockProducts(threshold));
                     break;
                 case 6:
                     displayTopSelling(reportController.q07_findTopSellingProducts());
                     break;
                 case 7:
-                    Long productId = Long.parseLong(txtParam1.getText().trim());
+                    if (p1.isEmpty()) throw new IllegalArgumentException("Vui lòng nhập ID sản phẩm.");
+                    Long productId = Long.parseLong(p1);
                     displayOrders(reportController.q12_findOrdersContainingProduct(productId));
                     break;
                 case 8:
@@ -191,6 +211,12 @@ public class ReportManagementPanel extends JPanel {
                     displayCustomers(reportController.q11_findCustomersWithoutOrders());
                     break;
             }
+        } catch (java.time.format.DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ. Vui lòng nhập theo định dạng yyyy-MM-dd.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Thông báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Lỗi chạy báo cáo: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }

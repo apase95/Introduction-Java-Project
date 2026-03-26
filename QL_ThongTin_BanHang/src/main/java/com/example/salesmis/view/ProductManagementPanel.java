@@ -62,19 +62,26 @@ public class ProductManagementPanel extends JPanel {
         topPanel.add(form, BorderLayout.NORTH);
 
         // Buttons
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
+
+        JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JButton btnNew = new JButton("Làm mới");
         JButton btnSave = new JButton("Thêm mới");
         JButton btnUpdate = new JButton("Cập nhật");
         JButton btnDelete = new JButton("Xóa");
-        JButton btnSearch = new JButton("Tìm");
+        leftButtons.add(btnNew);
+        leftButtons.add(btnSave);
+        leftButtons.add(btnUpdate);
+        leftButtons.add(btnDelete);
 
-        buttons.add(btnNew);
-        buttons.add(btnSave);
-        buttons.add(btnUpdate);
-        buttons.add(btnDelete);
-        buttons.add(txtSearch); txtSearch.setColumns(15);
-        buttons.add(btnSearch);
+        JPanel rightSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnSearch = new JButton("Tìm kiếm");
+        txtSearch.setColumns(15);
+        rightSearch.add(txtSearch);
+        rightSearch.add(btnSearch);
+
+        buttonsPanel.add(leftButtons, BorderLayout.WEST);
+        buttonsPanel.add(rightSearch, BorderLayout.EAST);
         
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveProduct());
@@ -82,7 +89,7 @@ public class ProductManagementPanel extends JPanel {
         btnDelete.addActionListener(e -> deleteProduct());
         btnSearch.addActionListener(e -> searchProducts());
 
-        topPanel.add(buttons, BorderLayout.SOUTH);
+        topPanel.add(buttonsPanel, BorderLayout.SOUTH);
         add(topPanel, BorderLayout.NORTH);
 
         // Table
@@ -148,14 +155,21 @@ public class ProductManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Thêm SP thành công: " + p.getSku());
             clearForm();
             loadData();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Đơn giá và Tồn kho phải là số hợp lệ.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi thêm SP: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void updateProduct() {
         try {
-            if (selectedId == null) return;
+            if (selectedId == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để cập nhật.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             BigDecimal price = new BigDecimal(txtPrice.getText().trim());
             int stock = Integer.parseInt(txtStock.getText().trim());
             Product p = productController.updateProduct(
@@ -165,21 +179,28 @@ public class ProductManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Cập nhật thành công: " + p.getSku());
             clearForm();
             loadData();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Đơn giá và Tồn kho phải là số hợp lệ.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi cập nhật SP: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void deleteProduct() {
         try {
-            if (selectedId == null) return;
+            if (selectedId == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để xóa.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
             if (JOptionPane.showConfirmDialog(this, "Xóa SP này?") == JOptionPane.YES_OPTION) {
                 productController.deleteProduct(selectedId);
                 clearForm();
                 loadData();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi xóa SP: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi xóa SP: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 

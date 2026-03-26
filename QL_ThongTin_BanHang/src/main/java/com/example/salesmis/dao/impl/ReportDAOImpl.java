@@ -44,6 +44,8 @@ public class ReportDAOImpl implements ReportDAO {
                     """, SalesOrder.class)
                     .setParameter("orderNo", orderNo)
                     .getSingleResult();
+        } catch (jakarta.persistence.NoResultException e) {
+            throw new IllegalArgumentException("Không tìm thấy đơn hàng nào với mã: " + orderNo);
         } finally {
             em.close();
         }

@@ -96,20 +96,27 @@ public class OrderManagementPanel extends JPanel {
 
         panel.add(form, BorderLayout.NORTH);
 
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        JButton btnNew = new JButton("New");
-        JButton btnSave = new JButton("Save");
-        JButton btnUpdate = new JButton("Update");
-        JButton btnDelete = new JButton("Delete");
-        JButton btnSearch = new JButton("Search");
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
 
-        buttons.add(btnNew);
-        buttons.add(btnSave);
-        buttons.add(btnUpdate);
-        buttons.add(btnDelete);
-        buttons.add(new JLabel("Keyword"));
-        buttons.add(txtSearch);
-        buttons.add(btnSearch);
+        JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton btnNew = new JButton("Làm mới");
+        JButton btnSave = new JButton("Lưu");
+        JButton btnUpdate = new JButton("Cập nhật");
+        JButton btnDelete = new JButton("Xóa");
+        leftButtons.add(btnNew);
+        leftButtons.add(btnSave);
+        leftButtons.add(btnUpdate);
+        leftButtons.add(btnDelete);
+
+        JPanel rightSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnSearch = new JButton("Tìm kiếm");
+        rightSearch.add(new JLabel("Từ khóa:"));
+        txtSearch.setColumns(15);
+        rightSearch.add(txtSearch);
+        rightSearch.add(btnSearch);
+
+        buttonsPanel.add(leftButtons, BorderLayout.WEST);
+        buttonsPanel.add(rightSearch, BorderLayout.EAST);
 
         btnNew.addActionListener(e -> clearForm());
         btnSave.addActionListener(e -> saveOrder());
@@ -117,7 +124,7 @@ public class OrderManagementPanel extends JPanel {
         btnDelete.addActionListener(e -> deleteOrder());
         btnSearch.addActionListener(e -> searchOrders());
 
-        panel.add(buttons, BorderLayout.SOUTH);
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -129,8 +136,8 @@ public class OrderManagementPanel extends JPanel {
         txtUnitPrice = new JTextField(10);
         txtUnitPrice.setEditable(false);
 
-        JButton btnAddLine = new JButton("Add Line");
-        JButton btnRemoveLine = new JButton("Remove Selected Line");
+        JButton btnAddLine = new JButton("Thêm dòng");
+        JButton btnRemoveLine = new JButton("Xóa dòng được chọn");
 
         cboProduct.addActionListener(e -> {
             Product p = (Product) cboProduct.getSelectedItem();
@@ -239,8 +246,12 @@ public class OrderManagementPanel extends JPanel {
             });
 
             txtQty.setText("");
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên hợp lệ.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -276,15 +287,19 @@ public class OrderManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Lưu đơn hàng thành công: " + saved.getOrderNo());
             clearForm();
             loadOrders();
+        } catch (java.time.format.DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ (yyyy-MM-dd).", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Lỗi lưu đơn hàng", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi lưu đơn hàng", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void updateOrder() {
         try {
             if (selectedOrderId == null) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn đơn hàng cần cập nhật.");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn đơn hàng cần cập nhật.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -302,15 +317,19 @@ public class OrderManagementPanel extends JPanel {
             JOptionPane.showMessageDialog(this, "Cập nhật thành công: " + updated.getOrderNo());
             clearForm();
             loadOrders();
+        } catch (java.time.format.DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Định dạng ngày không hợp lệ (yyyy-MM-dd).", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Lỗi cập nhật", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi cập nhật", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void deleteOrder() {
         try {
             if (selectedOrderId == null) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn đơn hàng cần xóa.");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn đơn hàng cần xóa.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
 
@@ -320,8 +339,10 @@ public class OrderManagementPanel extends JPanel {
                 clearForm();
                 loadOrders();
             }
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Cảnh báo", JOptionPane.WARNING_MESSAGE);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Lỗi xóa", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Lỗi hệ thống: " + ex.getMessage(), "Lỗi xóa", JOptionPane.ERROR_MESSAGE);
         }
     }
 
