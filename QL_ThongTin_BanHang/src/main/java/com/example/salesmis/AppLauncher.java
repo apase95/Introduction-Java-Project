@@ -18,7 +18,12 @@ import com.example.salesmis.service.impl.CustomerServiceImpl;
 import com.example.salesmis.service.impl.LookupServiceImpl;
 import com.example.salesmis.service.impl.OrderServiceImpl;
 import com.example.salesmis.service.impl.ProductServiceImpl;
+import com.example.salesmis.dao.AccountDAO;
+import com.example.salesmis.dao.impl.AccountDAOImpl;
+import com.example.salesmis.service.AccountService;
+import com.example.salesmis.service.impl.AccountServiceImpl;
 import com.example.salesmis.view.CustomerManagementPanel;
+import com.example.salesmis.view.LoginFrame;
 import com.example.salesmis.view.MainFrame;
 import com.example.salesmis.view.OrderManagementPanel;
 import com.example.salesmis.view.ProductManagementPanel;
@@ -28,6 +33,10 @@ import javax.swing.*;
 
 public class AppLauncher {
     public static void main(String[] args) {
+        // Init Account System
+        AccountDAO accountDAO = new AccountDAOImpl();
+        AccountService accountService = new AccountServiceImpl(accountDAO);
+
         // DAOs
         CustomerDAO customerDAO = new CustomerDAOImpl();
         ProductDAO productDAO = new ProductDAOImpl();
@@ -46,13 +55,25 @@ public class AppLauncher {
         ProductController productController = new ProductController(productService);
 
         SwingUtilities.invokeLater(() -> {
-            MainFrame frame = new MainFrame(
-                new OrderManagementPanel(orderController), 
-                new ReportManagementPanel(reportController),
-                new CustomerManagementPanel(customerController),
-                new ProductManagementPanel(productController)
-            );
-            frame.setVisible(true);
+            try {
+                accountService.ensureDefaultAdminExists();
+
+                LoginFrame loginFrame = new LoginFrame(accountService, () -> {
+                    MainFrame frame = new MainFrame(
+                        new OrderManagementPanel(orderController), 
+                        new ReportManagementPanel(reportController),
+                        new CustomerManagementPanel(customerController),
+                        new ProductManagementPanel(productController)
+                    );
+                    frame.setVisible(true);
+                });
+                
+                loginFrame.setVisible(true);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Lỗi khởi tạo hệ thống: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
     }
 }

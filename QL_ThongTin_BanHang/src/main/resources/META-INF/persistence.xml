@@ -13,6 +13,7 @@
         <class>com.example.salesmis.model.entity.Product</class>
         <class>com.example.salesmis.model.entity.SalesOrder</class>
         <class>com.example.salesmis.model.entity.OrderDetail</class>
+        <class>com.example.salesmis.model.entity.Account</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
@@ -22,7 +23,7 @@
             <property name="jakarta.persistence.jdbc.password" value="21121975"/>
 
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
