@@ -6,10 +6,12 @@ import com.example.salesmis.model.entity.Customer;
 import com.example.salesmis.model.entity.Product;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
+import com.example.salesmis.util.PdfExportUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,10 +105,13 @@ public class OrderManagementPanel extends JPanel {
         JButton btnSave = new JButton("Lưu");
         JButton btnUpdate = new JButton("Cập nhật");
         JButton btnDelete = new JButton("Xóa");
+        JButton btnExportPdf = new JButton("Xuất PDF");
+        
         leftButtons.add(btnNew);
         leftButtons.add(btnSave);
         leftButtons.add(btnUpdate);
         leftButtons.add(btnDelete);
+        leftButtons.add(btnExportPdf);
 
         JPanel rightSearch = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         JButton btnSearch = new JButton("Tìm kiếm");
@@ -122,6 +127,7 @@ public class OrderManagementPanel extends JPanel {
         btnSave.addActionListener(e -> saveOrder());
         btnUpdate.addActionListener(e -> updateOrder());
         btnDelete.addActionListener(e -> deleteOrder());
+        btnExportPdf.addActionListener(e -> exportPdf());
         btnSearch.addActionListener(e -> searchOrders());
 
         panel.add(buttonsPanel, BorderLayout.SOUTH);
@@ -351,6 +357,35 @@ public class OrderManagementPanel extends JPanel {
             renderOrders(orderController.searchOrders(txtSearch.getText()));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Lỗi tìm kiếm", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void exportPdf() {
+        if (selectedOrderId == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn đơn hàng cần xuất PDF.", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn vị trí lưu file PDF");
+        fileChooser.setSelectedFile(new File("HoaDon_" + txtOrderNo.getText() + ".pdf"));
+
+        int userSelection = fileChooser.showSaveDialog(this);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+            String destPath = fileToSave.getAbsolutePath();
+            if (!destPath.toLowerCase().endsWith(".pdf")) {
+                destPath += ".pdf";
+            }
+
+            try {
+                SalesOrder order = orderController.getOrderById(selectedOrderId);
+                PdfExportUtil.exportInvoice(order, destPath);
+                JOptionPane.showMessageDialog(this, "Xuất PDF thành công!\n" + destPath, "Thành công", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi khi xuất PDF: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+                ex.printStackTrace();
+            }
         }
     }
 
