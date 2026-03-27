@@ -2,6 +2,7 @@ package com.example.salesmis.service.impl;
 
 import com.example.salesmis.dao.CustomerDAO;
 import com.example.salesmis.dao.ProductDAO;
+import com.example.salesmis.dao.RecipeDAO;
 import com.example.salesmis.dao.SalesOrderDAO;
 import com.example.salesmis.dao.DiningTableDAO;
 import com.example.salesmis.model.dto.OrderLineInput;
@@ -9,6 +10,7 @@ import com.example.salesmis.model.entity.Customer;
 import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.OrderDetail;
 import com.example.salesmis.model.entity.Product;
+import com.example.salesmis.model.entity.Recipe;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
 import com.example.salesmis.service.OrderService;
@@ -24,12 +26,14 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerDAO customerDAO;
     private final ProductDAO productDAO;
     private final DiningTableDAO diningTableDAO;
+    private final RecipeDAO recipeDAO;
 
-    public OrderServiceImpl(SalesOrderDAO salesOrderDAO, CustomerDAO customerDAO, ProductDAO productDAO, DiningTableDAO diningTableDAO) {
+    public OrderServiceImpl(SalesOrderDAO salesOrderDAO, CustomerDAO customerDAO, ProductDAO productDAO, DiningTableDAO diningTableDAO, RecipeDAO recipeDAO) {
         this.salesOrderDAO = salesOrderDAO;
         this.customerDAO = customerDAO;
         this.productDAO = productDAO;
         this.diningTableDAO = diningTableDAO;
+        this.recipeDAO = recipeDAO;
     }
 
     @Override
@@ -99,8 +103,15 @@ public class OrderServiceImpl implements OrderService {
             Product product = productDAO.findById(line.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm id = " + line.getProductId()));
 
+            Recipe recipe = null;
+            if (line.getRecipeId() != null) {
+                recipe = recipeDAO.findById(line.getRecipeId())
+                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy kích cỡ/biến thể id = " + line.getRecipeId()));
+            }
+
             OrderDetail detail = new OrderDetail();
             detail.setProduct(product);
+            detail.setRecipe(recipe);
             detail.setQuantity(line.getQuantity());
             detail.setUnitPrice(line.getUnitPrice());
             detail.setLineTotal(line.getUnitPrice().multiply(BigDecimal.valueOf(line.getQuantity())));
@@ -178,8 +189,15 @@ public class OrderServiceImpl implements OrderService {
             Product product = productDAO.findById(line.getProductId())
                     .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm id = " + line.getProductId()));
 
+            Recipe recipe = null;
+            if (line.getRecipeId() != null) {
+                recipe = recipeDAO.findById(line.getRecipeId())
+                        .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy kích cỡ/biến thể id = " + line.getRecipeId()));
+            }
+
             OrderDetail detail = new OrderDetail();
             detail.setProduct(product);
+            detail.setRecipe(recipe);
             detail.setQuantity(line.getQuantity());
             detail.setUnitPrice(line.getUnitPrice());
             detail.setLineTotal(line.getUnitPrice().multiply(BigDecimal.valueOf(line.getQuantity())));

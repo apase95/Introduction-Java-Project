@@ -8,7 +8,8 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
     public MainFrame(Account account, OrderManagementPanel orderPanel, ReportManagementPanel reportPanel, 
-                     CustomerManagementPanel customerPanel, ProductManagementPanel productPanel) {
+                     CustomerManagementPanel customerPanel, ProductManagementPanel productPanel,
+                     RecipeManagementPanel recipePanel) {
         setTitle("MIS - Sales Management [" + account.getRole().name() + " : " + account.getUsername() + "]");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1300, 760);
@@ -22,6 +23,7 @@ public class MainFrame extends JFrame {
 
         if (account.getRole() == AccountRole.ADMIN) {
             tabbedPane.addTab("Quản lý sản phẩm", productPanel);
+            tabbedPane.addTab("Công thức & Kích cỡ", recipePanel);
             tabbedPane.addTab("Báo cáo thống kê", reportPanel);
         }
 

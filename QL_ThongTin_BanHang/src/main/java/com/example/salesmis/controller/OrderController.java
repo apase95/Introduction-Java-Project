@@ -4,6 +4,7 @@ import com.example.salesmis.model.dto.OrderLineInput;
 import com.example.salesmis.model.entity.Customer;
 import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.Product;
+import com.example.salesmis.model.entity.Recipe;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
 import com.example.salesmis.service.LookupService;
@@ -42,6 +43,10 @@ public class OrderController {
 
     public List<Product> getAllProducts() {
         return lookupService.getAllProducts();
+    }
+
+    public List<Recipe> getRecipesByProductId(Long productId) {
+        return lookupService.getRecipesByProductId(productId);
     }
 
     public SalesOrder createOrder(String orderNo, String orderDateText, Long customerId, Long tableId,

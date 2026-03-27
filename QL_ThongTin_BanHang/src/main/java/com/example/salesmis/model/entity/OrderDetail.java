@@ -20,6 +20,10 @@ public class OrderDetail {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe;
+
     @Column(nullable = false)
     private Integer quantity;
 
@@ -32,6 +36,7 @@ public class OrderDetail {
     public Long getId() { return id; }
     public SalesOrder getSalesOrder() { return salesOrder; }
     public Product getProduct() { return product; }
+    public Recipe getRecipe() { return recipe; }
     public Integer getQuantity() { return quantity; }
     public BigDecimal getUnitPrice() { return unitPrice; }
     public BigDecimal getLineTotal() { return lineTotal; }
@@ -39,6 +44,7 @@ public class OrderDetail {
     public void setId(Long id) { this.id = id; }
     public void setSalesOrder(SalesOrder salesOrder) { this.salesOrder = salesOrder; }
     public void setProduct(Product product) { this.product = product; }
+    public void setRecipe(Recipe recipe) { this.recipe = recipe; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
     public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }

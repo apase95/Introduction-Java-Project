@@ -38,12 +38,22 @@ public class PdfExportUtil {
         document.add(new Paragraph("Khách hàng: " + cusName, normalFont));
         
         String phone = (order.getCustomer() != null && order.getCustomer().getPhone() != null) ? order.getCustomer().getPhone() : "";
-        document.add(new Paragraph("SĐT: " + phone, normalFont));
+        if (!phone.isEmpty()) document.add(new Paragraph("SĐT: " + phone, normalFont));
         
         String address = (order.getCustomer() != null && order.getCustomer().getAddress() != null) ? order.getCustomer().getAddress() : "";
-        document.add(new Paragraph("Địa chỉ: " + address, normalFont));
+        if (!address.isEmpty()) document.add(new Paragraph("Địa chỉ: " + address, normalFont));
         
+        if (order.getDiningTable() != null) {
+            document.add(new Paragraph("Bàn: " + order.getDiningTable().getTableName(), boldFont));
+            if (order.getDiningTable().getZone() != null) {
+                document.add(new Paragraph("Khu vực: " + order.getDiningTable().getZone().getZoneName(), normalFont));
+            }
+        } else {
+            document.add(new Paragraph("Loại: Mua mang đi (Takeaway)", boldFont));
+        }
+
         document.add(new Paragraph(" "));
+
 
         // Table
         PdfPTable table = new PdfPTable(4);
@@ -58,7 +68,11 @@ public class PdfExportUtil {
 
         // Table Data
         for (OrderDetail d : order.getOrderDetails()) {
-            addCell(table, d.getProduct().getProductName(), normalFont, false);
+            String pName = d.getProduct().getProductName();
+            if (d.getRecipe() != null) {
+                pName += " (" + d.getRecipe().getVariationName() + ")";
+            }
+            addCell(table, pName, normalFont, false);
             addCell(table, String.valueOf(d.getQuantity()), normalFont, false);
             addCell(table, String.format("%,.0f", d.getUnitPrice()), normalFont, false);
             addCell(table, String.format("%,.0f", d.getLineTotal()), normalFont, false);

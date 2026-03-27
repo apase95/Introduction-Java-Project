@@ -5,6 +5,7 @@ import com.example.salesmis.model.dto.OrderLineInput;
 import com.example.salesmis.model.entity.Customer;
 import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.Product;
+import com.example.salesmis.model.entity.Recipe;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
 import com.example.salesmis.util.PdfExportUtil;
@@ -31,6 +32,7 @@ public class OrderManagementPanel extends JPanel {
     private JComboBox<String> cboStatus;
 
     private JComboBox<Product> cboProduct;
+    private JComboBox<Recipe> cboRecipe;
     private JTextField txtQty;
     private JTextField txtUnitPrice;
 
@@ -145,6 +147,7 @@ public class OrderManagementPanel extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         cboProduct = new JComboBox<>();
+        cboRecipe = new JComboBox<>();
         txtQty = new JTextField(6);
         txtUnitPrice = new JTextField(10);
         txtUnitPrice.setEditable(false);
@@ -156,6 +159,9 @@ public class OrderManagementPanel extends JPanel {
             Product p = (Product) cboProduct.getSelectedItem();
             if (p != null) {
                 txtUnitPrice.setText(p.getUnitPrice().toPlainString());
+                loadRecipesForProduct(p.getId());
+            } else {
+                cboRecipe.removeAllItems();
             }
         });
         btnAddLine.addActionListener(e -> addLine());
@@ -163,6 +169,8 @@ public class OrderManagementPanel extends JPanel {
 
         panel.add(new JLabel("Product"));
         panel.add(cboProduct);
+        panel.add(new JLabel("Size/Variation"));
+        panel.add(cboRecipe);
         panel.add(new JLabel("Qty"));
         panel.add(txtQty);
         panel.add(new JLabel("Unit Price"));
@@ -192,7 +200,7 @@ public class OrderManagementPanel extends JPanel {
 
     private JScrollPane buildDetailTablePanel() {
         detailTableModel = new DefaultTableModel(
-                new String[]{"Product ID", "SKU", "Product", "Qty", "Unit Price", "Line Total"}, 0
+                new String[]{"Product ID", "Recipe ID", "SKU", "Product", "Size", "Qty", "Unit Price", "Line Total"}, 0
         ) {
             @Override public boolean isCellEditable(int row, int column) { return false; }
         };
@@ -223,7 +231,17 @@ public class OrderManagementPanel extends JPanel {
         }
         if (cboProduct.getItemCount() > 0) {
             Product p = (Product) cboProduct.getItemAt(0);
+            cboProduct.setSelectedItem(p);
             txtUnitPrice.setText(p.getUnitPrice().toPlainString());
+            loadRecipesForProduct(p.getId());
+        }
+    }
+
+    private void loadRecipesForProduct(Long productId) {
+        cboRecipe.removeAllItems();
+        cboRecipe.addItem(null); // Allow empty recipe/size
+        for (Recipe r : orderController.getRecipesByProductId(productId)) {
+            cboRecipe.addItem(r);
         }
     }
 
@@ -257,10 +275,16 @@ public class OrderManagementPanel extends JPanel {
             BigDecimal price = new BigDecimal(txtUnitPrice.getText().trim());
             BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(qty));
 
+            Recipe r = (Recipe) cboRecipe.getSelectedItem();
+            Long recipeId = r != null ? r.getId() : null;
+            String sizeName = r != null ? r.getVariationName() : "";
+
             detailTableModel.addRow(new Object[]{
                     p.getId(),
+                    recipeId,
                     p.getSku(),
                     p.getProductName(),
+                    sizeName,
                     qty,
                     price,
                     lineTotal
@@ -284,9 +308,14 @@ public class OrderManagementPanel extends JPanel {
         List<OrderLineInput> lines = new ArrayList<>();
         for (int i = 0; i < detailTableModel.getRowCount(); i++) {
             Long productId = Long.valueOf(detailTableModel.getValueAt(i, 0).toString());
-            int qty = Integer.parseInt(detailTableModel.getValueAt(i, 3).toString());
-            BigDecimal price = new BigDecimal(detailTableModel.getValueAt(i, 4).toString());
-            lines.add(new OrderLineInput(productId, qty, price));
+            Object rawRecipeId = detailTableModel.getValueAt(i, 1);
+            Long recipeId = null;
+            if (rawRecipeId != null && !rawRecipeId.toString().isEmpty()) {
+                recipeId = Long.valueOf(rawRecipeId.toString());
+            }
+            int qty = Integer.parseInt(detailTableModel.getValueAt(i, 5).toString());
+            BigDecimal price = new BigDecimal(detailTableModel.getValueAt(i, 6).toString());
+            lines.add(new OrderLineInput(productId, recipeId, qty, price));
         }
         return lines;
     }
@@ -447,8 +476,10 @@ public class OrderManagementPanel extends JPanel {
         detailTableModel.setRowCount(0);
         order.getOrderDetails().forEach(d -> detailTableModel.addRow(new Object[]{
                 d.getProduct().getId(),
+                d.getRecipe() != null ? d.getRecipe().getId() : null,
                 d.getProduct().getSku(),
                 d.getProduct().getProductName(),
+                d.getRecipe() != null ? d.getRecipe().getVariationName() : "",
                 d.getQuantity(),
                 d.getUnitPrice(),
                 d.getLineTotal()
