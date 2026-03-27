@@ -142,8 +142,8 @@ public class OrderManagementPanel extends JPanel {
         txtUnitPrice = new JTextField(10);
         txtUnitPrice.setEditable(false);
 
-        JButton btnAddLine = new JButton("Thêm dòng");
-        JButton btnRemoveLine = new JButton("Xóa dòng được chọn");
+        JButton btnAddLine = new JButton("Thêm sản phẩm");
+        JButton btnRemoveLine = new JButton("Xóa sản phẩm");
 
         cboProduct.addActionListener(e -> {
             Product p = (Product) cboProduct.getSelectedItem();
