@@ -22,6 +22,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     LEFT JOIN FETCH o.orderDetails d
                     LEFT JOIN FETCH d.product p
                     LEFT JOIN FETCH p.category
+                    LEFT JOIN FETCH d.recipe
                     ORDER BY o.id DESC
                     """, SalesOrder.class).getResultList();
         } finally {
@@ -42,6 +43,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     LEFT JOIN FETCH o.orderDetails d
                     LEFT JOIN FETCH d.product p
                     LEFT JOIN FETCH p.category
+                    LEFT JOIN FETCH d.recipe
                     WHERE o.id = :id
                     """, SalesOrder.class)
                     .setParameter("id", id)
@@ -84,6 +86,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     LEFT JOIN FETCH o.orderDetails d
                     LEFT JOIN FETCH d.product p
                     LEFT JOIN FETCH p.category
+                    LEFT JOIN FETCH d.recipe
                     WHERE LOWER(o.orderNo) LIKE LOWER(:kw)
                        OR LOWER(c.fullName) LIKE LOWER(:kw)
                     ORDER BY o.id DESC

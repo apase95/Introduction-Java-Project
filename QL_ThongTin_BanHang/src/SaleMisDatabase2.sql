@@ -113,6 +113,7 @@ CREATE TABLE order_details (
     id BIGINT NOT NULL AUTO_INCREMENT,
     order_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
+    recipe_id BIGINT,
     quantity INT NOT NULL,
     unit_price DECIMAL(12,2) NOT NULL,
     line_total DECIMAL(14,2) NOT NULL,
@@ -127,7 +128,11 @@ CREATE TABLE order_details (
     CONSTRAINT fk_order_details_product
         FOREIGN KEY (product_id) REFERENCES products(id)
         ON UPDATE CASCADE
-        ON DELETE RESTRICT
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_order_details_recipe
+        FOREIGN KEY (recipe_id) REFERENCES recipes(id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_customers_name ON customers(full_name);
@@ -137,3 +142,4 @@ CREATE INDEX idx_orders_customer ON orders(customer_id);
 CREATE INDEX idx_orders_table ON orders(table_id);
 CREATE INDEX idx_order_details_order ON order_details(order_id);
 CREATE INDEX idx_order_details_product ON order_details(product_id);
+CREATE INDEX idx_order_details_recipe ON order_details(recipe_id);

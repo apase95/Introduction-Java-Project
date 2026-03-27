@@ -68,7 +68,10 @@ public class OrderManagementPanel extends JPanel {
     private JPanel buildHeaderForm() {
         JPanel panel = new JPanel(new BorderLayout(8, 8));
 
-        JPanel form = new JPanel(new GridLayout(3, 4, 8, 8));
+        JPanel form = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         txtOrderId = new JTextField();
         txtOrderId.setEditable(false);
@@ -87,23 +90,28 @@ public class OrderManagementPanel extends JPanel {
                 OrderStatus.CANCELLED.name()
         });
 
-        form.add(new JLabel("Order ID"));
-        form.add(txtOrderId);
-        form.add(new JLabel("Order No"));
-        form.add(txtOrderNo);
+        // Dòng 1: Order ID, Order No, Order Date
+        gbc.gridy = 0;
+        gbc.gridx = 0; gbc.weightx = 0; form.add(new JLabel("Order ID"), gbc);
+        gbc.gridx = 1; gbc.weightx = 1; form.add(txtOrderId, gbc);
+        gbc.gridx = 2; gbc.weightx = 0; form.add(new JLabel("Order No"), gbc);
+        gbc.gridx = 3; gbc.weightx = 1; form.add(txtOrderNo, gbc);
+        gbc.gridx = 4; gbc.weightx = 0; form.add(new JLabel("Order Date"), gbc);
+        gbc.gridx = 5; gbc.weightx = 1; form.add(txtOrderDate, gbc);
 
-        form.add(new JLabel("Order Date (yyyy-MM-dd)"));
-        form.add(txtOrderDate);
-        form.add(new JLabel("Customer"));
-        form.add(cboCustomer);
+        // Dòng 2: Customer, Table, Status
+        gbc.gridy = 1;
+        gbc.gridx = 0; gbc.weightx = 0; form.add(new JLabel("Customer"), gbc);
+        gbc.gridx = 1; gbc.weightx = 1; form.add(cboCustomer, gbc);
+        gbc.gridx = 2; gbc.weightx = 0; form.add(new JLabel("Table"), gbc);
+        gbc.gridx = 3; gbc.weightx = 1; form.add(cboTable, gbc);
+        gbc.gridx = 4; gbc.weightx = 0; form.add(new JLabel("Status"), gbc);
+        gbc.gridx = 5; gbc.weightx = 1; form.add(cboStatus, gbc);
 
-        form.add(new JLabel("Table"));
-        form.add(cboTable);
-
-        form.add(new JLabel("Status"));
-        form.add(cboStatus);
-        form.add(new JLabel("Note"));
-        form.add(txtNote);
+        // Dòng 3: Note (chiếm toàn bộ 5 cột còn lại)
+        gbc.gridy = 2;
+        gbc.gridx = 0; gbc.weightx = 0; form.add(new JLabel("Note"), gbc);
+        gbc.gridx = 1; gbc.weightx = 1; gbc.gridwidth = 5; form.add(txtNote, gbc);
 
         panel.add(form, BorderLayout.NORTH);
 

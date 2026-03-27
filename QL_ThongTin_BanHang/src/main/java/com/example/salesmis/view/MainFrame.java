@@ -20,10 +20,10 @@ public class MainFrame extends JFrame {
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
         tabbedPane.addTab("Quản lý đơn hàng", orderPanel);
         tabbedPane.addTab("Quản lý khách hàng", customerPanel);
+        tabbedPane.addTab("Công thức & Kích cỡ", recipePanel);
 
         if (account.getRole() == AccountRole.ADMIN) {
             tabbedPane.addTab("Quản lý sản phẩm", productPanel);
-            tabbedPane.addTab("Công thức & Kích cỡ", recipePanel);
             tabbedPane.addTab("Báo cáo thống kê", reportPanel);
         }
 
