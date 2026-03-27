@@ -26,6 +26,10 @@ public class SalesOrder {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "table_id")
+    private DiningTable diningTable;
+
     @Column(name = "total_amount", nullable = false, precision = 14, scale = 2)
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
@@ -53,6 +57,7 @@ public class SalesOrder {
     public String getOrderNo() { return orderNo; }
     public LocalDate getOrderDate() { return orderDate; }
     public Customer getCustomer() { return customer; }
+    public DiningTable getDiningTable() { return diningTable; }
     public BigDecimal getTotalAmount() { return totalAmount; }
     public OrderStatus getStatus() { return status; }
     public String getNote() { return note; }
@@ -62,6 +67,7 @@ public class SalesOrder {
     public void setOrderNo(String orderNo) { this.orderNo = orderNo; }
     public void setOrderDate(LocalDate orderDate) { this.orderDate = orderDate; }
     public void setCustomer(Customer customer) { this.customer = customer; }
+    public void setDiningTable(DiningTable diningTable) { this.diningTable = diningTable; }
     public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
     public void setStatus(OrderStatus status) { this.status = status; }
     public void setNote(String note) { this.note = note; }

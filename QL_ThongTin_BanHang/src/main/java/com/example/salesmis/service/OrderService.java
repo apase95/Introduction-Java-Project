@@ -14,6 +14,7 @@ public interface OrderService {
     SalesOrder createOrder(String orderNo,
                            LocalDate orderDate,
                            Long customerId,
+                           Long tableId,
                            OrderStatus status,
                            String note,
                            List<OrderLineInput> lines);
@@ -22,6 +23,7 @@ public interface OrderService {
                            String orderNo,
                            LocalDate orderDate,
                            Long customerId,
+                           Long tableId,
                            OrderStatus status,
                            String note,
                            List<OrderLineInput> lines);

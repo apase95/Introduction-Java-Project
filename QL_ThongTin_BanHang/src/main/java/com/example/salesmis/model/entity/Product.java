@@ -19,8 +19,9 @@ public class Product {
     @Column(name = "product_name", nullable = false, length = 150)
     private String productName;
 
-    @Column(length = 100)
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPrice = BigDecimal.ZERO;
@@ -34,6 +35,9 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Recipe> recipes = new ArrayList<>();
+
     public Product() {}
 
     public Product(String sku, String productName, BigDecimal unitPrice) {
@@ -45,20 +49,22 @@ public class Product {
     public Long getId() { return id; }
     public String getSku() { return sku; }
     public String getProductName() { return productName; }
-    public String getCategory() { return category; }
+    public Category getCategory() { return category; }
     public BigDecimal getUnitPrice() { return unitPrice; }
     public Integer getStockQty() { return stockQty; }
     public Boolean getActive() { return active; }
     public List<OrderDetail> getOrderDetails() { return orderDetails; }
+    public List<Recipe> getRecipes() { return recipes; }
 
     public void setId(Long id) { this.id = id; }
     public void setSku(String sku) { this.sku = sku; }
     public void setProductName(String productName) { this.productName = productName; }
-    public void setCategory(String category) { this.category = category; }
+    public void setCategory(Category category) { this.category = category; }
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
     public void setStockQty(Integer stockQty) { this.stockQty = stockQty; }
     public void setActive(Boolean active) { this.active = active; }
     public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
+    public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
 
     @Override
     public String toString() {

@@ -3,8 +3,10 @@ package com.example.salesmis.service.impl;
 import com.example.salesmis.dao.CustomerDAO;
 import com.example.salesmis.dao.ProductDAO;
 import com.example.salesmis.dao.SalesOrderDAO;
+import com.example.salesmis.dao.DiningTableDAO;
 import com.example.salesmis.model.dto.OrderLineInput;
 import com.example.salesmis.model.entity.Customer;
+import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.OrderDetail;
 import com.example.salesmis.model.entity.Product;
 import com.example.salesmis.model.entity.SalesOrder;
@@ -21,11 +23,13 @@ public class OrderServiceImpl implements OrderService {
     private final SalesOrderDAO salesOrderDAO;
     private final CustomerDAO customerDAO;
     private final ProductDAO productDAO;
+    private final DiningTableDAO diningTableDAO;
 
-    public OrderServiceImpl(SalesOrderDAO salesOrderDAO, CustomerDAO customerDAO, ProductDAO productDAO) {
+    public OrderServiceImpl(SalesOrderDAO salesOrderDAO, CustomerDAO customerDAO, ProductDAO productDAO, DiningTableDAO diningTableDAO) {
         this.salesOrderDAO = salesOrderDAO;
         this.customerDAO = customerDAO;
         this.productDAO = productDAO;
+        this.diningTableDAO = diningTableDAO;
     }
 
     @Override
@@ -45,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public SalesOrder createOrder(String orderNo, LocalDate orderDate, Long customerId,
+    public SalesOrder createOrder(String orderNo, LocalDate orderDate, Long customerId, Long tableId,
                                   OrderStatus status, String note, List<OrderLineInput> lines) {
         validate(orderNo, orderDate, customerId, lines);
 
@@ -56,10 +60,17 @@ public class OrderServiceImpl implements OrderService {
         Customer customer = customerDAO.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy khách hàng."));
 
+        DiningTable table = null;
+        if (tableId != null) {
+            table = diningTableDAO.findById(tableId)
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bàn/vị trí."));
+        }
+
         SalesOrder order = new SalesOrder();
         order.setOrderNo(orderNo.trim());
         order.setOrderDate(orderDate);
         order.setCustomer(customer);
+        order.setDiningTable(table);
         order.setStatus(status);
         order.setNote(note);
 
@@ -103,12 +114,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public SalesOrder updateOrder(Long id, String orderNo, LocalDate orderDate, Long customerId,
+    public SalesOrder updateOrder(Long id, String orderNo, LocalDate orderDate, Long customerId, Long tableId,
                                   OrderStatus status, String note, List<OrderLineInput> lines) {
         validate(orderNo, orderDate, customerId, lines);
         SalesOrder existing = getOrderById(id);
         Customer customer = customerDAO.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy khách hàng."));
+
+        DiningTable table = null;
+        if (tableId != null) {
+            table = diningTableDAO.findById(tableId)
+                    .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bàn/vị trí."));
+        }
 
         salesOrderDAO.findByOrderNo(orderNo.trim()).ifPresent(found -> {
             if (!found.getId().equals(id)) {
@@ -151,6 +168,7 @@ public class OrderServiceImpl implements OrderService {
         existing.setOrderNo(orderNo.trim());
         existing.setOrderDate(orderDate);
         existing.setCustomer(customer);
+        existing.setDiningTable(table);
         existing.setStatus(status);
         existing.setNote(note);
         existing.clearDetails();

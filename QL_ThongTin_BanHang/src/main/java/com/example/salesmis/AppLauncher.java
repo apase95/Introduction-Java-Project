@@ -4,10 +4,14 @@ import com.example.salesmis.controller.CustomerController;
 import com.example.salesmis.controller.OrderController;
 import com.example.salesmis.controller.ProductController;
 import com.example.salesmis.controller.ReportController;
+import com.example.salesmis.dao.CategoryDAO;
 import com.example.salesmis.dao.CustomerDAO;
+import com.example.salesmis.dao.DiningTableDAO;
 import com.example.salesmis.dao.ProductDAO;
 import com.example.salesmis.dao.SalesOrderDAO;
+import com.example.salesmis.dao.impl.CategoryDAOImpl;
 import com.example.salesmis.dao.impl.CustomerDAOImpl;
+import com.example.salesmis.dao.impl.DiningTableDAOImpl;
 import com.example.salesmis.dao.impl.ProductDAOImpl;
 import com.example.salesmis.dao.impl.SalesOrderDAOImpl;
 import com.example.salesmis.service.CustomerService;
@@ -41,18 +45,20 @@ public class AppLauncher {
         CustomerDAO customerDAO = new CustomerDAOImpl();
         ProductDAO productDAO = new ProductDAOImpl();
         SalesOrderDAO salesOrderDAO = new SalesOrderDAOImpl();
+        CategoryDAO categoryDAO = new CategoryDAOImpl();
+        DiningTableDAO diningTableDAO = new DiningTableDAOImpl();
 
         // Services
-        LookupService lookupService = new LookupServiceImpl(customerDAO, productDAO);
-        OrderService orderService = new OrderServiceImpl(salesOrderDAO, customerDAO, productDAO);
+        LookupService lookupService = new LookupServiceImpl(customerDAO, productDAO, categoryDAO, diningTableDAO);
+        OrderService orderService = new OrderServiceImpl(salesOrderDAO, customerDAO, productDAO, diningTableDAO);
         CustomerService customerService = new CustomerServiceImpl(customerDAO);
-        ProductService productService = new ProductServiceImpl(productDAO);
+        ProductService productService = new ProductServiceImpl(productDAO, categoryDAO);
 
         // Controllers
         OrderController orderController = new OrderController(orderService, lookupService);
         ReportController reportController = new ReportController();
         CustomerController customerController = new CustomerController(customerService);
-        ProductController productController = new ProductController(productService);
+        ProductController productController = new ProductController(productService, lookupService);
 
         SwingUtilities.invokeLater(() -> {
             try {

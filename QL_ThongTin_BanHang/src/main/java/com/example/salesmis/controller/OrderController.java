@@ -2,6 +2,7 @@ package com.example.salesmis.controller;
 
 import com.example.salesmis.model.dto.OrderLineInput;
 import com.example.salesmis.model.entity.Customer;
+import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.Product;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
@@ -35,29 +36,35 @@ public class OrderController {
         return lookupService.getAllCustomers();
     }
 
+    public List<DiningTable> getAllDiningTables() {
+        return lookupService.getAllDiningTables();
+    }
+
     public List<Product> getAllProducts() {
         return lookupService.getAllProducts();
     }
 
-    public SalesOrder createOrder(String orderNo, String orderDateText, Long customerId,
+    public SalesOrder createOrder(String orderNo, String orderDateText, Long customerId, Long tableId,
                                   String statusText, String note, List<OrderLineInput> lines) {
         return orderService.createOrder(
                 orderNo,
                 LocalDate.parse(orderDateText),
                 customerId,
+                tableId,
                 OrderStatus.valueOf(statusText),
                 note,
                 lines
         );
     }
 
-    public SalesOrder updateOrder(Long id, String orderNo, String orderDateText, Long customerId,
+    public SalesOrder updateOrder(Long id, String orderNo, String orderDateText, Long customerId, Long tableId,
                                   String statusText, String note, List<OrderLineInput> lines) {
         return orderService.updateOrder(
                 id,
                 orderNo,
                 LocalDate.parse(orderDateText),
                 customerId,
+                tableId,
                 OrderStatus.valueOf(statusText),
                 note,
                 lines

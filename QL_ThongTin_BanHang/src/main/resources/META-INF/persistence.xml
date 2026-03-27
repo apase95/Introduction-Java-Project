@@ -14,6 +14,12 @@
         <class>com.example.salesmis.model.entity.SalesOrder</class>
         <class>com.example.salesmis.model.entity.OrderDetail</class>
         <class>com.example.salesmis.model.entity.Account</class>
+        <class>com.example.salesmis.model.entity.Category</class>
+        <class>com.example.salesmis.model.entity.Zone</class>
+        <class>com.example.salesmis.model.entity.DiningTable</class>
+        <class>com.example.salesmis.model.entity.Ingredient</class>
+        <class>com.example.salesmis.model.entity.Recipe</class>
+        <class>com.example.salesmis.model.entity.RecipeIngredient</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

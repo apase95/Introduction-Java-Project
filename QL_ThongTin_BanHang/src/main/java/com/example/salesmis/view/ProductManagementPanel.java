@@ -1,6 +1,7 @@
 package com.example.salesmis.view;
 
 import com.example.salesmis.controller.ProductController;
+import com.example.salesmis.model.entity.Category;
 import com.example.salesmis.model.entity.Product;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class ProductManagementPanel extends JPanel {
     private JTextField txtId;
     private JTextField txtSku;
     private JTextField txtName;
-    private JTextField txtCategory;
+    private JComboBox<Category> cboCategory;
     private JTextField txtPrice;
     private JTextField txtStock;
     private JCheckBox chkActive;
@@ -29,6 +30,7 @@ public class ProductManagementPanel extends JPanel {
     public ProductManagementPanel(ProductController productController) {
         this.productController = productController;
         initComponents();
+        loadCategories();
         loadData();
     }
 
@@ -44,7 +46,7 @@ public class ProductManagementPanel extends JPanel {
         txtId.setEditable(false);
         txtSku = new JTextField();
         txtName = new JTextField();
-        txtCategory = new JTextField();
+        cboCategory = new JComboBox<>();
         txtPrice = new JTextField();
         txtStock = new JTextField();
         chkActive = new JCheckBox("Đang bán");
@@ -54,7 +56,7 @@ public class ProductManagementPanel extends JPanel {
         form.add(new JLabel("ID")); form.add(txtId);
         form.add(new JLabel("SKU")); form.add(txtSku);
         form.add(new JLabel("Tên SP")); form.add(txtName);
-        form.add(new JLabel("Danh mục")); form.add(txtCategory);
+        form.add(new JLabel("Danh mục")); form.add(cboCategory);
         form.add(new JLabel("Đơn giá")); form.add(txtPrice);
         form.add(new JLabel("Tồn kho")); form.add(txtStock);
         form.add(new JLabel("Trạng thái")); form.add(chkActive);
@@ -106,6 +108,13 @@ public class ProductManagementPanel extends JPanel {
         add(new JScrollPane(tblProducts), BorderLayout.CENTER);
     }
 
+    private void loadCategories() {
+        cboCategory.removeAllItems();
+        for (Category c : productController.getAllCategories()) {
+            cboCategory.addItem(c);
+        }
+    }
+
     private void loadData() {
         renderTable(productController.getAllProducts());
     }
@@ -126,7 +135,19 @@ public class ProductManagementPanel extends JPanel {
         txtId.setText(selectedId.toString());
         txtSku.setText(tableModel.getValueAt(row, 1).toString());
         txtName.setText(tableModel.getValueAt(row, 2).toString());
-        txtCategory.setText(tableModel.getValueAt(row, 3) != null ? tableModel.getValueAt(row, 3).toString() : "");
+        
+        Object categoryValue = tableModel.getValueAt(row, 3);
+        cboCategory.setSelectedIndex(-1);
+        if (categoryValue instanceof Category) {
+            Category cat = (Category) categoryValue;
+            for (int i = 0; i < cboCategory.getItemCount(); i++) {
+                if (cboCategory.getItemAt(i).getId().equals(cat.getId())) {
+                    cboCategory.setSelectedIndex(i);
+                    break;
+                }
+            }
+        }
+        
         txtPrice.setText(tableModel.getValueAt(row, 4).toString());
         txtStock.setText(tableModel.getValueAt(row, 5).toString());
         chkActive.setSelected((Boolean) tableModel.getValueAt(row, 6));
@@ -137,7 +158,7 @@ public class ProductManagementPanel extends JPanel {
         txtId.setText("");
         txtSku.setText("");
         txtName.setText("");
-        txtCategory.setText("");
+        cboCategory.setSelectedIndex(-1);
         txtPrice.setText("");
         txtStock.setText("");
         chkActive.setSelected(true);
@@ -148,8 +169,11 @@ public class ProductManagementPanel extends JPanel {
         try {
             BigDecimal price = new BigDecimal(txtPrice.getText().trim());
             int stock = Integer.parseInt(txtStock.getText().trim());
+            Category selectedCategory = (Category) cboCategory.getSelectedItem();
+            Long catId = selectedCategory != null ? selectedCategory.getId() : null;
+            
             Product p = productController.createProduct(
-                txtSku.getText().trim(), txtName.getText().trim(), txtCategory.getText().trim(),
+                txtSku.getText().trim(), txtName.getText().trim(), catId,
                 price, stock, chkActive.isSelected()
             );
             JOptionPane.showMessageDialog(this, "Thêm SP thành công: " + p.getSku());
@@ -172,8 +196,11 @@ public class ProductManagementPanel extends JPanel {
             }
             BigDecimal price = new BigDecimal(txtPrice.getText().trim());
             int stock = Integer.parseInt(txtStock.getText().trim());
+            Category selectedCategory = (Category) cboCategory.getSelectedItem();
+            Long catId = selectedCategory != null ? selectedCategory.getId() : null;
+
             Product p = productController.updateProduct(
-                selectedId, txtSku.getText().trim(), txtName.getText().trim(), txtCategory.getText().trim(),
+                selectedId, txtSku.getText().trim(), txtName.getText().trim(), catId,
                 price, stock, chkActive.isSelected()
             );
             JOptionPane.showMessageDialog(this, "Cập nhật thành công: " + p.getSku());

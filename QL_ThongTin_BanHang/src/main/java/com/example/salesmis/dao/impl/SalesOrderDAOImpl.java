@@ -17,8 +17,11 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     SELECT DISTINCT o
                     FROM SalesOrder o
                     LEFT JOIN FETCH o.customer
+                    LEFT JOIN FETCH o.diningTable dt
+                    LEFT JOIN FETCH dt.zone
                     LEFT JOIN FETCH o.orderDetails d
-                    LEFT JOIN FETCH d.product
+                    LEFT JOIN FETCH d.product p
+                    LEFT JOIN FETCH p.category
                     ORDER BY o.id DESC
                     """, SalesOrder.class).getResultList();
         } finally {
@@ -34,8 +37,11 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     SELECT DISTINCT o
                     FROM SalesOrder o
                     LEFT JOIN FETCH o.customer
+                    LEFT JOIN FETCH o.diningTable dt
+                    LEFT JOIN FETCH dt.zone
                     LEFT JOIN FETCH o.orderDetails d
-                    LEFT JOIN FETCH d.product
+                    LEFT JOIN FETCH d.product p
+                    LEFT JOIN FETCH p.category
                     WHERE o.id = :id
                     """, SalesOrder.class)
                     .setParameter("id", id)
@@ -52,6 +58,9 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         try {
             List<SalesOrder> list = em.createQuery("""
                     SELECT o FROM SalesOrder o
+                    LEFT JOIN FETCH o.customer
+                    LEFT JOIN FETCH o.diningTable dt
+                    LEFT JOIN FETCH dt.zone
                     WHERE LOWER(o.orderNo) = LOWER(:orderNo)
                     """, SalesOrder.class)
                     .setParameter("orderNo", orderNo)
@@ -70,8 +79,11 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
                     SELECT DISTINCT o
                     FROM SalesOrder o
                     JOIN FETCH o.customer c
+                    LEFT JOIN FETCH o.diningTable dt
+                    LEFT JOIN FETCH dt.zone
                     LEFT JOIN FETCH o.orderDetails d
-                    LEFT JOIN FETCH d.product
+                    LEFT JOIN FETCH d.product p
+                    LEFT JOIN FETCH p.category
                     WHERE LOWER(o.orderNo) LIKE LOWER(:kw)
                        OR LOWER(c.fullName) LIKE LOWER(:kw)
                     ORDER BY o.id DESC

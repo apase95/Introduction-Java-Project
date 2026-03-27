@@ -12,7 +12,7 @@ public class ProductDAOImpl implements ProductDAO {
     public List<Product> findAll() {
         EntityManager em = JpaUtil.getEntityManager();
         try {
-            return em.createQuery("SELECT p FROM Product p ORDER BY p.sku", Product.class)
+            return em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.category ORDER BY p.sku", Product.class)
                     .getResultList();
         } finally {
             em.close();
@@ -74,7 +74,7 @@ public class ProductDAOImpl implements ProductDAO {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             String kw = "%" + keyword.toLowerCase() + "%";
-            return em.createQuery("SELECT p FROM Product p WHERE LOWER(p.sku) LIKE :kw OR LOWER(p.productName) LIKE :kw", Product.class)
+            return em.createQuery("SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE LOWER(p.sku) LIKE :kw OR LOWER(p.productName) LIKE :kw", Product.class)
                     .setParameter("kw", kw)
                     .getResultList();
         } finally {

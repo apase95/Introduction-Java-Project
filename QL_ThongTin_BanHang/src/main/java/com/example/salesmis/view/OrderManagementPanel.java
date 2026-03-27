@@ -3,6 +3,7 @@ package com.example.salesmis.view;
 import com.example.salesmis.controller.OrderController;
 import com.example.salesmis.model.dto.OrderLineInput;
 import com.example.salesmis.model.entity.Customer;
+import com.example.salesmis.model.entity.DiningTable;
 import com.example.salesmis.model.entity.Product;
 import com.example.salesmis.model.entity.SalesOrder;
 import com.example.salesmis.model.enumtype.OrderStatus;
@@ -26,6 +27,7 @@ public class OrderManagementPanel extends JPanel {
     private JTextField txtNote;
 
     private JComboBox<Customer> cboCustomer;
+    private JComboBox<DiningTable> cboTable;
     private JComboBox<String> cboStatus;
 
     private JComboBox<Product> cboProduct;
@@ -43,6 +45,7 @@ public class OrderManagementPanel extends JPanel {
         this.orderController = orderController;
         initComponents();
         loadCustomers();
+        loadTables();
         loadProducts();
         loadOrders();
     }
@@ -74,6 +77,7 @@ public class OrderManagementPanel extends JPanel {
         txtNote = new JTextField();
 
         cboCustomer = new JComboBox<>();
+        cboTable = new JComboBox<>();
         cboStatus = new JComboBox<>(new String[]{
                 OrderStatus.NEW.name(),
                 OrderStatus.CONFIRMED.name(),
@@ -90,6 +94,9 @@ public class OrderManagementPanel extends JPanel {
         form.add(txtOrderDate);
         form.add(new JLabel("Customer"));
         form.add(cboCustomer);
+
+        form.add(new JLabel("Table"));
+        form.add(cboTable);
 
         form.add(new JLabel("Status"));
         form.add(cboStatus);
@@ -201,6 +208,14 @@ public class OrderManagementPanel extends JPanel {
         }
     }
 
+    private void loadTables() {
+        cboTable.removeAllItems();
+        cboTable.addItem(null); // Optional null item for Takeaway or generic order
+        for (DiningTable t : orderController.getAllDiningTables()) {
+            cboTable.addItem(t);
+        }
+    }
+
     private void loadProducts() {
         cboProduct.removeAllItems();
         for (Product p : orderController.getAllProducts()) {
@@ -281,10 +296,14 @@ public class OrderManagementPanel extends JPanel {
             Customer customer = (Customer) cboCustomer.getSelectedItem();
             if (customer == null) throw new IllegalArgumentException("Chưa chọn khách hàng.");
 
+            DiningTable table = (DiningTable) cboTable.getSelectedItem();
+            Long tableId = table != null ? table.getId() : null;
+
             SalesOrder saved = orderController.createOrder(
                     txtOrderNo.getText(),
                     txtOrderDate.getText(),
                     customer.getId(),
+                    tableId,
                     cboStatus.getSelectedItem().toString(),
                     txtNote.getText(),
                     buildLines()
@@ -310,11 +329,15 @@ public class OrderManagementPanel extends JPanel {
             }
 
             Customer customer = (Customer) cboCustomer.getSelectedItem();
+            DiningTable table = (DiningTable) cboTable.getSelectedItem();
+            Long tableId = table != null ? table.getId() : null;
+
             SalesOrder updated = orderController.updateOrder(
                     selectedOrderId,
                     txtOrderNo.getText(),
                     txtOrderDate.getText(),
                     customer.getId(),
+                    tableId,
                     cboStatus.getSelectedItem().toString(),
                     txtNote.getText(),
                     buildLines()
@@ -407,6 +430,17 @@ public class OrderManagementPanel extends JPanel {
             if (c.getId().equals(order.getCustomer().getId())) {
                 cboCustomer.setSelectedIndex(i);
                 break;
+            }
+        }
+
+        cboTable.setSelectedIndex(0);
+        if (order.getDiningTable() != null) {
+            for (int i = 0; i < cboTable.getItemCount(); i++) {
+                DiningTable t = cboTable.getItemAt(i);
+                if (t != null && t.getId().equals(order.getDiningTable().getId())) {
+                    cboTable.setSelectedIndex(i);
+                    break;
+                }
             }
         }
 
