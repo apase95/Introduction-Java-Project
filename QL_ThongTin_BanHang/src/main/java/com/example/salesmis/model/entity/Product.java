@@ -32,6 +32,9 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = true;
 
+    @Column(name = "image_path")
+    private String imagePath = "default.png";
+
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
@@ -53,6 +56,7 @@ public class Product {
     public BigDecimal getUnitPrice() { return unitPrice; }
     public Integer getStockQty() { return stockQty; }
     public Boolean getActive() { return active; }
+    public String getImagePath() { return imagePath; }
     public List<OrderDetail> getOrderDetails() { return orderDetails; }
     public List<Recipe> getRecipes() { return recipes; }
 
@@ -63,6 +67,7 @@ public class Product {
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
     public void setStockQty(Integer stockQty) { this.stockQty = stockQty; }
     public void setActive(Boolean active) { this.active = active; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
     public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
     public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
 

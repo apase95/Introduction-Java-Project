@@ -21,8 +21,6 @@ public class OrderProductPanel extends JPanel {
     private final OrderController orderController;
     private final CustomerController customerController;
 
-    private JTable tblProducts;
-    private DefaultTableModel productTableModel;
 
     private JTable tblCart;
     private DefaultTableModel cartTableModel;
@@ -87,61 +85,100 @@ public class OrderProductPanel extends JPanel {
         pnlCart.add(pnlCartSouth, BorderLayout.SOUTH);
 
         // Center: Danh sách sản phẩm
-        JPanel pnlProducts = new JPanel(new BorderLayout(5, 5));
-        pnlProducts.setBorder(BorderFactory.createTitledBorder("Danh Sách Sản Phẩm (Click đúp để chọn)"));
+        JPanel pnlRight = new JPanel(new BorderLayout(5, 5));
+        pnlRight.setBorder(BorderFactory.createTitledBorder("Danh Sách Sản Phẩm (Click đúp vào sản phẩm)"));
 
-        productTableModel = new DefaultTableModel(
-                new Object[]{"ID", "Danh mục", "Mã SP", "Tên SP", "Giá", "Tồn kho"}, 0
-        ) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        tblProducts = new JTable(productTableModel);
-        tblProducts.getColumnModel().getColumn(0).setMinWidth(0);
-        tblProducts.getColumnModel().getColumn(0).setMaxWidth(0);
+        pnlProductGrid = new JPanel(new GridLayout(0, 2, 10, 10)); // 2 columns exactly
+        pnlProductGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        tblProducts.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    int row = tblProducts.getSelectedRow();
-                    if (row != -1) {
-                        Long productId = (Long) productTableModel.getValueAt(row, 0);
-                        Product product = orderController.getAllProducts().stream()
-                                .filter(p -> p.getId().equals(productId)).findFirst().orElse(null);
-                        if (product != null) {
-                            showAddToCartDialog(product);
-                        }
-                    }
-                }
-            }
-        });
-
-        pnlProducts.add(new JScrollPane(tblProducts), BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(pnlProductGrid);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        pnlRight.add(scrollPane, BorderLayout.CENTER);
 
         // Split Pane chia 2 nửa
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnlCart, pnlProducts);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnlCart, pnlRight);
         splitPane.setResizeWeight(0.4);
         add(splitPane, BorderLayout.CENTER);
     }
 
+    private JPanel pnlProductGrid; // Added member for the grid
+
     private void loadProducts() {
-        productTableModel.setRowCount(0);
+        pnlProductGrid.removeAll();
         for (Product p : orderController.getAllProducts()) {
             if (Boolean.TRUE.equals(p.getActive())) {
-                String catName = p.getCategory() != null ? p.getCategory().getCategoryName() : "N/A";
-                productTableModel.addRow(new Object[]{
-                        p.getId(),
-                        catName,
-                        p.getSku(),
-                        p.getProductName(),
-                        p.getUnitPrice(),
-                        p.getStockQty()
-                });
+                pnlProductGrid.add(createProductCard(p));
             }
         }
+        pnlProductGrid.revalidate();
+        pnlProductGrid.repaint();
+    }
+
+    private JPanel createProductCard(Product p) {
+        JPanel card = new JPanel(new BorderLayout(5, 5));
+        card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        card.setBackground(Color.WHITE);
+
+        // Top: Image
+        String imgPath = p.getImagePath();
+        if (imgPath == null || imgPath.trim().isEmpty()) {
+            imgPath = "default.png";
+        }
+        
+        JLabel lblImage = new JLabel();
+        lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+        lblImage.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+        try {
+            java.net.URL imgUrl = getClass().getResource("/images/" + imgPath);
+            if (imgUrl != null) {
+                ImageIcon icon = new ImageIcon(imgUrl);
+                // Resize if too large
+                Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblImage.setIcon(new ImageIcon(img));
+            } else {
+                lblImage.setText("[Hình ảnh]"); // Fallback text
+            }
+        } catch (Exception ex) {
+            lblImage.setText("[Lỗi Hình ảnh]");
+        }
+        card.add(lblImage, BorderLayout.CENTER);
+
+        // Bottom: 2 lines (Name, Price)
+        JPanel infoPanel = new JPanel(new GridLayout(2, 1));
+        infoPanel.setBackground(Color.WHITE);
+        infoPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        JLabel lblName = new JLabel(p.getProductName(), SwingConstants.CENTER);
+        lblName.setFont(new Font("Arial", Font.BOLD, 14));
+        
+        JLabel lblPrice = new JLabel(p.getUnitPrice().toPlainString() + " VND", SwingConstants.CENTER);
+        lblPrice.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblPrice.setForeground(new Color(0, 102, 51));
+
+        infoPanel.add(lblName);
+        infoPanel.add(lblPrice);
+        card.add(infoPanel, BorderLayout.SOUTH);
+
+        // Click Event (Double click or single click? Single is better for cards, but prompt says "double click" in title, we can support both here, we will just use 2 clicks to match previous style, or single click to be pos friendly)
+        card.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // For POS, 1 click is much faster. Let's make it 1 click.
+                showAddToCartDialog(p);
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                card.setBackground(new Color(240, 240, 240));
+                infoPanel.setBackground(new Color(240, 240, 240));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                card.setBackground(Color.WHITE);
+                infoPanel.setBackground(Color.WHITE);
+            }
+        });
+
+        return card;
     }
 
     private void showAddToCartDialog(Product product) {
