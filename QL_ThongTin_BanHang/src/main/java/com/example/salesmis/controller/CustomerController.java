@@ -41,4 +41,8 @@ public class CustomerController {
     public void deleteCustomer(Long id) { customerService.deleteCustomer(id); }
     
     public List<Customer> searchCustomers(String keyword) { return customerService.searchCustomers(keyword); }
+
+    public Customer ensureDefaultCustomer() {
+        return customerService.ensureDefaultCustomer();
+    }
 }

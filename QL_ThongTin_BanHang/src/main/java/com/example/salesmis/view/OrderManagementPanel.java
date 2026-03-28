@@ -503,5 +503,9 @@ public class OrderManagementPanel extends JPanel {
         txtSearch.setText("");
         detailTableModel.setRowCount(0);
         tblOrders.clearSelection();
+        loadOrders();
+        loadCustomers();
+        loadProducts();
+        loadTables();
     }
 }

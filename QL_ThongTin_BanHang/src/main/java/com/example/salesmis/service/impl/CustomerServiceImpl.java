@@ -17,4 +17,21 @@ public class CustomerServiceImpl implements CustomerService {
     @Override public Customer saveCustomer(Customer customer) { return customerDAO.save(customer); }
     @Override public void deleteCustomer(Long id) { customerDAO.delete(id); }
     @Override public List<Customer> searchCustomers(String keyword) { return customerDAO.searchByKeyword(keyword); }
+
+    @Override
+    public Customer ensureDefaultCustomer() {
+        return customerDAO.findAll().stream()
+                .filter(c -> "KVL01".equals(c.getCustomerCode()))
+                .findFirst()
+                .orElseGet(() -> {
+                    Customer defaultCustomer = new Customer();
+                    defaultCustomer.setCustomerCode("KVL01");
+                    defaultCustomer.setFullName("Khách vãng lai");
+                    defaultCustomer.setPhone("");
+                    defaultCustomer.setEmail("");
+                    defaultCustomer.setAddress("");
+                    defaultCustomer.setActive(true);
+                    return customerDAO.save(defaultCustomer);
+                });
+    }
 }

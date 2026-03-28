@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-    public MainFrame(Account account, OrderManagementPanel orderPanel, ReportManagementPanel reportPanel, 
+    public MainFrame(Account account, OrderProductPanel orderProductPanel, OrderManagementPanel orderPanel, ReportManagementPanel reportPanel, 
                      CustomerManagementPanel customerPanel, ProductManagementPanel productPanel,
                      RecipeManagementPanel recipePanel) {
         setTitle("MIS - Sales Management [" + account.getRole().name() + " : " + account.getUsername() + "]");
@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("Arial", Font.BOLD, 14));
+        tabbedPane.addTab("Bán Hàng (POS)", orderProductPanel);
         tabbedPane.addTab("Quản lý đơn hàng", orderPanel);
         tabbedPane.addTab("Quản lý khách hàng", customerPanel);
         tabbedPane.addTab("Công thức & Kích cỡ", recipePanel);

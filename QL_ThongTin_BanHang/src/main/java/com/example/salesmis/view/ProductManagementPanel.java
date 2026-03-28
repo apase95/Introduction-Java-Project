@@ -163,6 +163,8 @@ public class ProductManagementPanel extends JPanel {
         txtStock.setText("");
         chkActive.setSelected(true);
         tblProducts.clearSelection();
+        loadData();
+        loadCategories();
     }
 
     private void saveProduct() {

@@ -9,4 +9,5 @@ public interface CustomerService {
     Customer saveCustomer(Customer customer);
     void deleteCustomer(Long id);
     List<Customer> searchCustomers(String keyword);
+    Customer ensureDefaultCustomer();
 }

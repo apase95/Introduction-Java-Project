@@ -141,6 +141,7 @@ public class CustomerManagementPanel extends JPanel {
         txtAddress.setText("");
         chkActive.setSelected(true);
         tblCustomers.clearSelection();
+        loadData();
     }
 
     private void saveCustomer() {
