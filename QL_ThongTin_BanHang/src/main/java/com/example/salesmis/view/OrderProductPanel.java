@@ -59,7 +59,11 @@ public class OrderProductPanel extends JPanel {
         pnlCart.add(new JScrollPane(tblCart), BorderLayout.CENTER);
 
         // Nút xoá món khỏi giỏ
+        Dimension btnSize = new Dimension(150, 40);
+
         JButton btnRemoveCart = new JButton("Xoá món chọn");
+        btnRemoveCart.setFont(new Font("Arial", Font.BOLD, 14));
+        btnRemoveCart.setPreferredSize(btnSize);
         btnRemoveCart.addActionListener(e -> removeSelectedCartItem());
 
         JPanel pnlCartSouth = new JPanel(new BorderLayout(5, 5));
@@ -67,9 +71,9 @@ public class OrderProductPanel extends JPanel {
         lblTotalAmount.setFont(new Font("Arial", Font.BOLD, 16));
         lblTotalAmount.setForeground(Color.RED);
 
-        JButton btnCheckout = new JButton("Đặt Hàng (NEW)");
+        JButton btnCheckout = new JButton("Đặt Hàng");
         btnCheckout.setFont(new Font("Arial", Font.BOLD, 14));
-        btnCheckout.setPreferredSize(new Dimension(150, 40));
+        btnCheckout.setPreferredSize(btnSize);
         btnCheckout.addActionListener(e -> checkoutCart());
 
         JPanel pnlTotal = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -191,9 +195,21 @@ public class OrderProductPanel extends JPanel {
         List<Recipe> recipes = orderController.getRecipesByProductId(product.getId());
 
         JComboBox<Recipe> cboRecipe = new JComboBox<>();
-        cboRecipe.addItem(null); // No size by default
         for (Recipe r : recipes) {
             cboRecipe.addItem(r);
+        }
+        // Mặc định chọn Size M; nếu không có thì chọn item đầu tiên
+        int defaultIdx = 0;
+        for (int i = 0; i < cboRecipe.getItemCount(); i++) {
+            Recipe r = cboRecipe.getItemAt(i);
+            if (r != null && r.getVariationName() != null
+                    && r.getVariationName().toUpperCase().contains("SIZE M")) {
+                defaultIdx = i;
+                break;
+            }
+        }
+        if (cboRecipe.getItemCount() > 0) {
+            cboRecipe.setSelectedIndex(defaultIdx);
         }
 
         JTextField txtQty = new JTextField("1", 10);

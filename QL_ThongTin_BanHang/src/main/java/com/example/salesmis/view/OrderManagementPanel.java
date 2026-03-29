@@ -156,7 +156,7 @@ public class OrderManagementPanel extends JPanel {
 
         cboProduct = new JComboBox<>();
         cboRecipe = new JComboBox<>();
-        txtQty = new JTextField(6);
+        txtQty = new JTextField("1", 6);
         txtUnitPrice = new JTextField(10);
         txtUnitPrice.setEditable(false);
 
@@ -226,10 +226,27 @@ public class OrderManagementPanel extends JPanel {
 
     private void loadTables() {
         cboTable.removeAllItems();
-        cboTable.addItem(null); // Optional null item for Takeaway or generic order
+        // "Takeaway" ưu tiên đầu tiên, đại diện null table
+        cboTable.addItem(null);
         for (DiningTable t : orderController.getAllDiningTables()) {
             cboTable.addItem(t);
         }
+        // Hiển thị "Takeaway" cho item null
+        cboTable.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value == null) {
+                    setText("Takeaway (Mang về)");
+                } else {
+                    setText(value.toString());
+                }
+                return this;
+            }
+        });
+        // Mặc định chọn Takeaway
+        cboTable.setSelectedIndex(0);
     }
 
     private void loadProducts() {
@@ -247,9 +264,22 @@ public class OrderManagementPanel extends JPanel {
 
     private void loadRecipesForProduct(Long productId) {
         cboRecipe.removeAllItems();
-        cboRecipe.addItem(null); // Allow empty recipe/size
-        for (Recipe r : orderController.getRecipesByProductId(productId)) {
+        List<Recipe> recipes = orderController.getRecipesByProductId(productId);
+        for (Recipe r : recipes) {
             cboRecipe.addItem(r);
+        }
+        // Mặc định chọn Size M; nếu không có thì chọn item đầu tiên
+        int defaultIdx = 0;
+        for (int i = 0; i < cboRecipe.getItemCount(); i++) {
+            Recipe r = cboRecipe.getItemAt(i);
+            if (r != null && r.getVariationName() != null
+                    && r.getVariationName().toUpperCase().contains("SIZE M")) {
+                defaultIdx = i;
+                break;
+            }
+        }
+        if (cboRecipe.getItemCount() > 0) {
+            cboRecipe.setSelectedIndex(defaultIdx);
         }
     }
 
