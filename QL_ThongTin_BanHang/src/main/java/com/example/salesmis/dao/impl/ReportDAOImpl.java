@@ -17,6 +17,7 @@ import java.util.List;
 
 public class ReportDAOImpl implements ReportDAO {
 
+    /** Q1: Lấy toàn bộ đơn hàng kèm thông tin khách, sắp xếp mới nhất trước. */
     @Override
     public List<SalesOrder> q01_findAllOrdersWithCustomer() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -32,6 +33,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q2: Tìm đơn hàng chính xác theo mã đơn; ném ngoại lệ nếu không tìm thấy. */
     @Override
     public SalesOrder q02_findOrderByOrderNo(String orderNo) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -51,6 +53,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q3: Tìm đơn hàng theo tên khách hàng (tìm kiếm mờ). */
     @Override
     public List<SalesOrder> q03_findOrdersByCustomerKeyword(String keyword) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -69,6 +72,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q4: Lấy đơn hàng trong khoảng ngày chỉ định. */
     @Override
     public List<SalesOrder> q04_findOrdersBetween(LocalDate from, LocalDate to) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -88,6 +92,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q5: Lấy đơn hàng theo trạng thái (NEW/CONFIRMED/COMPLETED/CANCELLED). */
     @Override
     public List<SalesOrder> q05_findOrdersByStatus(OrderStatus status) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -106,6 +111,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q6: Lấy danh sách sản phẩm có tồn kho bằng hoặc dưới ngưỡng. */
     @Override
     public List<Product> q06_findLowStockProducts(int threshold) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -123,6 +129,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q7: Thống kê sản phẩm bán chạy theo tổng số lượng và doanh thu. */
     @Override
     public List<ProductSalesDTO> q07_findTopSellingProducts() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -145,6 +152,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q8: Thống kê doanh thu theo từng khách hàng, sắp xếp giảm dần. */
     @Override
     public List<CustomerRevenueDTO> q08_findRevenueByCustomer() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -166,6 +174,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q9: Thống kê doanh thu theo từng tháng, sắp xếp theo năm và tháng. */
     @Override
     public List<MonthlyRevenueDTO> q09_findRevenueByMonth() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -186,6 +195,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q10: Đếm số đơn hàng theo từng trạng thái. */
     @Override
     public List<StatusCountDTO> q10_countOrdersByStatus() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -205,6 +215,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q11: Tìm khách hàng chưa có đơn hàng nào. */
     @Override
     public List<Customer> q11_findCustomersWithoutOrders() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -220,6 +231,7 @@ public class ReportDAOImpl implements ReportDAO {
             em.close();
         }
     }
+    /** Q12: Tìm tất cả đơn hàng có chứa một sản phẩm cụ thể. */
     @Override
     public List<SalesOrder> q12_findOrdersContainingProduct(Long productId) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -239,6 +251,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q13: Tính giá trị trung bình của một đơn hàng. */
     @Override
     public BigDecimal q13_findAverageOrderValue() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -253,6 +266,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q14: Tìm giá trị đơn hàng lớn nhất. */
     @Override
     public BigDecimal q14_findMaxOrderValue() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -267,6 +281,7 @@ public class ReportDAOImpl implements ReportDAO {
         }
     }
 
+    /** Q15: Tìm giá trị đơn hàng nhỏ nhất. */
     @Override
     public BigDecimal q15_findMinOrderValue() {
         EntityManager em = JpaUtil.getEntityManager();

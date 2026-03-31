@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public class AccountDAOImpl implements AccountDAO {
 
+    /** Tìm tài khoản theo tên đăng nhập trong CSDL. */
     @Override
     public Optional<Account> findByUsername(String username) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -23,6 +24,7 @@ public class AccountDAOImpl implements AccountDAO {
         }
     }
 
+    /** Lưu mới hoặc cập nhật tài khoản; dùng persist nếu chưa có ID, merge nếu đã có. */
     @Override
     public Account save(Account account) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -45,6 +47,7 @@ public class AccountDAOImpl implements AccountDAO {
         }
     }
 
+    /** Đếm tổng số tài khoản trong bảng accounts. */
     @Override
     public long countAccounts() {
         EntityManager em = JpaUtil.getEntityManager();

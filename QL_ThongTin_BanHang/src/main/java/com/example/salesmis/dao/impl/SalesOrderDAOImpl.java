@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SalesOrderDAOImpl implements SalesOrderDAO {
+    /** Lấy tất cả đơn hàng cùng khách, bàn, sản phẩm, sắp xếp mới nhất trước. */
     @Override
     public List<SalesOrder> findAll() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -30,6 +31,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Tìm một đơn hàng cùng toàn bộ liên kết theo ID. */
     @Override
     public Optional<SalesOrder> findById(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -54,6 +56,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Tìm đơn hàng theo mã đơn (không phân biệt hoa thường). */
     @Override
     public Optional<SalesOrder> findByOrderNo(String orderNo) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -73,6 +76,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Tìm kiếm đơn hàng theo mã đơn hoặc tên khách hàng. */
     @Override
     public List<SalesOrder> searchByKeyword(String keyword) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -98,6 +102,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Lưu mới đơn hàng vào CSDL. */
     @Override
     public SalesOrder save(SalesOrder order) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -115,6 +120,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Cập nhật đơn hàng đã tồn tại bằng merge. */
     @Override
     public SalesOrder update(SalesOrder order) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -132,6 +138,7 @@ public class SalesOrderDAOImpl implements SalesOrderDAO {
         }
     }
 
+    /** Xóa đơn hàng theo ID; bỏ qua nếu không tìm thấy. */
     @Override
     public void deleteById(Long id) {
         EntityManager em = JpaUtil.getEntityManager();

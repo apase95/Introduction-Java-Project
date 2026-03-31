@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class CustomerDAOImpl implements CustomerDAO {
+    /** Lấy danh sách tất cả khách hàng sắp xếp theo mã. */
     @Override
     public List<Customer> findAll() {
         EntityManager em = JpaUtil.getEntityManager();
@@ -19,6 +20,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
+    /** Tìm khách hàng theo ID. */
     @Override
     public Optional<Customer> findById(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -29,6 +31,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
+    /** Lưu mới hoặc cập nhật khách hàng. */
     @Override
     public Customer save(Customer customer) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -51,6 +54,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
+    /** Xóa khách hàng theo ID; bỏ qua nếu không tìm thấy. */
     @Override
     public void delete(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -69,6 +73,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
+    /** Tìm kiếm khách hàng theo từ khóa trong mã hoặc tên (không phân biệt hoa thường). */
     @Override
     public List<Customer> searchByKeyword(String keyword) {
         EntityManager em = JpaUtil.getEntityManager();
