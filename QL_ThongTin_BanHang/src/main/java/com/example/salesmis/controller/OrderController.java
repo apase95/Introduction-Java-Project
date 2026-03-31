@@ -21,34 +21,42 @@ public class OrderController {
         this.lookupService = lookupService;
     }
 
+    /** Lấy danh sách tất cả đơn hàng. */
     public List<SalesOrder> getAllOrders() {
         return orderService.getAllOrders();
     }
 
+    /** Tìm kiếm đơn hàng theo từ khóa. */
     public List<SalesOrder> searchOrders(String keyword) {
         return orderService.searchOrders(keyword);
     }
 
+    /** Lấy đơn hàng theo ID. */
     public SalesOrder getOrderById(Long id) {
         return orderService.getOrderById(id);
     }
 
+    /** Lấy danh sách khách hàng để điền vào ComboBox. */
     public List<Customer> getAllCustomers() {
         return lookupService.getAllCustomers();
     }
 
+    /** Lấy danh sách bàn ăn để điền vào ComboBox. */
     public List<DiningTable> getAllDiningTables() {
         return lookupService.getAllDiningTables();
     }
 
+    /** Lấy danh sách sản phẩm để điền vào ComboBox. */
     public List<Product> getAllProducts() {
         return lookupService.getAllProducts();
     }
 
+    /** Lấy danh sách công thức (size/biến thể) của một sản phẩm. */
     public List<Recipe> getRecipesByProductId(Long productId) {
         return lookupService.getRecipesByProductId(productId);
     }
 
+    /** Tạo mới đơn hàng từ các tham số của UI (chuỗi ngày và trạng thái được parse tự động). */
     public SalesOrder createOrder(String orderNo, String orderDateText, Long customerId, Long tableId,
                                   String statusText, String note, List<OrderLineInput> lines) {
         return orderService.createOrder(
@@ -62,6 +70,7 @@ public class OrderController {
         );
     }
 
+    /** Cập nhật đơn hàng theo ID từ các tham số của UI. */
     public SalesOrder updateOrder(Long id, String orderNo, String orderDateText, Long customerId, Long tableId,
                                   String statusText, String note, List<OrderLineInput> lines) {
         return orderService.updateOrder(
@@ -76,6 +85,7 @@ public class OrderController {
         );
     }
 
+    /** Xóa đơn hàng theo ID. */
     public void deleteOrder(Long id) {
         orderService.deleteOrder(id);
     }

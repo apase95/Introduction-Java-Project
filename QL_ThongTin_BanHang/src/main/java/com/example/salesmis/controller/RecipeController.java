@@ -18,14 +18,17 @@ public class RecipeController {
         this.lookupService = lookupService;
     }
 
+    /** Lấy danh sách tất cả sản phẩm (dùng cho ComboBox chọn sản phẩm). */
     public List<Product> getAllProducts() {
         return lookupService.getAllProducts();
     }
 
+    /** Lấy danh sách công thức theo sản phẩm. */
     public List<Recipe> getRecipesByProduct(Long productId) {
         return recipeService.getRecipesByProduct(productId);
     }
 
+    /** Lưu hoặc cập nhật công thức gắn với sản phẩm chỉ định. */
     public Recipe saveRecipe(Long productId, Long recipeId, String variationName, boolean active) {
         Recipe recipe = new Recipe();
         recipe.setId(recipeId);
@@ -34,22 +37,27 @@ public class RecipeController {
         return recipeService.saveRecipe(productId, recipe);
     }
 
+    /** Xóa công thức theo ID. */
     public void deleteRecipe(Long recipeId) {
         recipeService.deleteRecipe(recipeId);
     }
 
+    /** Lấy danh sách tất cả nguyên liệu. */
     public List<Ingredient> getAllIngredients() {
         return recipeService.getAllIngredients();
     }
 
+    /** Thêm nguyên liệu vào công thức với số lượng. */
     public Recipe addIngredientToRecipe(Long recipeId, Long ingredientId, BigDecimal quantity) {
         return recipeService.addIngredientToRecipe(recipeId, ingredientId, quantity);
     }
 
+    /** Xóa nguyên liệu khỏi công thức. */
     public void removeIngredientFromRecipe(Long recipeId, Long ingredientId) {
         recipeService.removeIngredientFromRecipe(recipeId, ingredientId);
     }
 
+    /** Lưu hoặc cập nhật nguyên liệu từ dữ liệu UI. */
     public Ingredient saveIngredient(Long id, String code, String name, String unit, BigDecimal stockQty, boolean active) {
         Ingredient i = new Ingredient();
         i.setId(id);
@@ -61,6 +69,7 @@ public class RecipeController {
         return recipeService.saveIngredient(i);
     }
 
+    /** Xóa nguyên liệu theo ID. */
     public void deleteIngredient(Long id) {
         recipeService.deleteIngredient(id);
     }
