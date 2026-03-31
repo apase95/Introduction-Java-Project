@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 public class PdfExportUtil {
 
+    /** Xuất hóa đơn bán hàng của đơn hàng ra file PDF tại đường dẫn chỉ định. */
     public static void exportInvoice(SalesOrder order, String destPath) throws Exception {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, new FileOutputStream(destPath));
@@ -89,6 +90,7 @@ public class PdfExportUtil {
         document.close();
     }
 
+    /** Thêm một ô vào bảng PDF với font và kiểu hiển thị (header/data) tương ứng. */
     private static void addCell(PdfPTable table, String text, Font font, boolean isHeader) {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setPadding(5);

@@ -44,6 +44,7 @@ import com.example.salesmis.view.ReportManagementPanel;
 import javax.swing.*;
 
 public class AppLauncher {
+    /** Khởi động ứng dụng: khởi tạo các tầng DAO/Service/Controller rồi hiển thị màn hình đăng nhập. */
     public static void main(String[] args) {
         // Init Account System
         AccountDAO accountDAO = new AccountDAOImpl();
