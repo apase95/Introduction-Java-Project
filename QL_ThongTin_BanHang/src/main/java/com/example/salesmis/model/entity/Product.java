@@ -41,8 +41,10 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Recipe> recipes = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public Product() {}
 
+    /** Constructor tạo sản phẩm với mã SKU, tên và giá bán. */
     public Product(String sku, String productName, BigDecimal unitPrice) {
         this.sku = sku;
         this.productName = productName;
@@ -71,11 +73,13 @@ public class Product {
     public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
     public void setRecipes(List<Recipe> recipes) { this.recipes = recipes; }
 
+    /** Trả về mã SKU và tên sản phẩm để hiển thị trong ComboBox. */
     @Override
     public String toString() {
         return sku + " - " + productName;
     }
 
+    /** So sánh hai sản phẩm dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,6 +87,7 @@ public class Product {
         return id != null && Objects.equals(id, that.id);
     }
 
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() {
         return getClass().hashCode();

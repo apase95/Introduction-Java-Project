@@ -43,11 +43,13 @@ public class SalesOrder {
     @OneToMany(mappedBy = "salesOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
+    /** Thêm một dòng chi tiết vào đơn hàng và thiết lập liên kết ngược. */
     public void addDetail(OrderDetail detail) {
         orderDetails.add(detail);
         detail.setSalesOrder(this);
     }
 
+    /** Xóa sạch toàn bộ chi tiết đơn hàng hiện tại. */
     public void clearDetails() {
         orderDetails.forEach(d -> d.setSalesOrder(null));
         orderDetails.clear();
@@ -73,11 +75,13 @@ public class SalesOrder {
     public void setNote(String note) { this.note = note; }
     public void setOrderDetails(List<OrderDetail> orderDetails) { this.orderDetails = orderDetails; }
 
+    /** Trả về mã đơn hàng để hiển thị trong danh sách. */
     @Override
     public String toString() {
         return orderNo;
     }
 
+    /** So sánh hai đơn hàng dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +89,7 @@ public class SalesOrder {
         return id != null && Objects.equals(id, that.id);
     }
 
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() {
         return getClass().hashCode();

@@ -49,6 +49,7 @@ public class OrderDetail {
     public void setUnitPrice(BigDecimal unitPrice) { this.unitPrice = unitPrice; }
     public void setLineTotal(BigDecimal lineTotal) { this.lineTotal = lineTotal; }
 
+    /** So sánh hai dòng chi tiết đơn hàng dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,6 +57,7 @@ public class OrderDetail {
         return id != null && Objects.equals(id, that.id);
     }
 
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() {
         return getClass().hashCode();

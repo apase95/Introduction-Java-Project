@@ -28,6 +28,7 @@ public class Zone {
     @OneToMany(mappedBy = "zone", fetch = FetchType.LAZY)
     private List<DiningTable> diningTables = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public Zone() {}
 
     public Long getId() { return id; }
@@ -48,15 +49,18 @@ public class Zone {
     public List<DiningTable> getDiningTables() { return diningTables; }
     public void setDiningTables(List<DiningTable> diningTables) { this.diningTables = diningTables; }
 
+    /** Trả về tên khu vực để hiển thị trong ComboBox. */
     @Override
     public String toString() { return zoneName; }
 
+    /** So sánh hai khu vực dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Zone that)) return false;
         return id != null && Objects.equals(id, that.id);
     }
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() { return getClass().hashCode(); }
 }

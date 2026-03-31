@@ -22,6 +22,7 @@ public class RecipeIngredient {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal quantity;
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public RecipeIngredient() {}
 
     public Long getId() { return id; }
@@ -36,12 +37,14 @@ public class RecipeIngredient {
     public BigDecimal getQuantity() { return quantity; }
     public void setQuantity(BigDecimal quantity) { this.quantity = quantity; }
 
+    /** So sánh hai nguyên liệu-công thức dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RecipeIngredient that)) return false;
         return id != null && Objects.equals(id, that.id);
     }
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() { return getClass().hashCode(); }
 }

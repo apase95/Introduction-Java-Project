@@ -24,6 +24,7 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Product> products = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public Category() {}
 
     public Long getId() { return id; }
@@ -41,15 +42,18 @@ public class Category {
     public List<Product> getProducts() { return products; }
     public void setProducts(List<Product> products) { this.products = products; }
 
+    /** Trả về tên danh mục để hiển thị trong các ComboBox/danh sách. */
     @Override
     public String toString() { return categoryName; }
 
+    /** So sánh hai danh mục dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Category that)) return false;
         return id != null && Objects.equals(id, that.id);
     }
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() {
         return getClass().hashCode();

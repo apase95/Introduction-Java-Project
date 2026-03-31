@@ -31,6 +31,7 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private List<RecipeIngredient> recipeIngredients = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public Ingredient() {}
 
     public Long getId() { return id; }
@@ -54,15 +55,18 @@ public class Ingredient {
     public List<RecipeIngredient> getRecipeIngredients() { return recipeIngredients; }
     public void setRecipeIngredients(List<RecipeIngredient> recipeIngredients) { this.recipeIngredients = recipeIngredients; }
 
+    /** Trả về tên nguyên liệu để hiển thị trong ComboBox. */
     @Override
     public String toString() { return ingredientName; }
 
+    /** So sánh hai nguyên liệu dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Ingredient that)) return false;
         return id != null && Objects.equals(id, that.id);
     }
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() { return getClass().hashCode(); }
 }

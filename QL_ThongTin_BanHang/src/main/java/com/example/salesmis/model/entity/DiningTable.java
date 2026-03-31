@@ -28,6 +28,7 @@ public class DiningTable {
     @OneToMany(mappedBy = "diningTable", fetch = FetchType.LAZY)
     private List<SalesOrder> salesOrders = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public DiningTable() {}
 
     public Long getId() { return id; }
@@ -48,15 +49,18 @@ public class DiningTable {
     public List<SalesOrder> getSalesOrders() { return salesOrders; }
     public void setSalesOrders(List<SalesOrder> salesOrders) { this.salesOrders = salesOrders; }
 
+    /** Trả về tên bàn kèm khu vực để hiển thị trong ComboBox. */
     @Override
     public String toString() { return tableName + " (" + (zone != null ? zone.getZoneName() : "") + ")"; }
 
+    /** So sánh hai bàn ăn dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DiningTable that)) return false;
         return id != null && Objects.equals(id, that.id);
     }
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() { return getClass().hashCode(); }
 }

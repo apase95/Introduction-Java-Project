@@ -33,8 +33,10 @@ public class Customer {
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<SalesOrder> orders = new ArrayList<>();
 
+    /** Constructor mặc định không tham số, JPA yêu cầu. */
     public Customer() {}
 
+    /** Constructor tạo khách hàng với mã và tẪn. */
     public Customer(String customerCode, String fullName) {
         this.customerCode = customerCode;
         this.fullName = fullName;
@@ -58,11 +60,13 @@ public class Customer {
     public void setActive(Boolean active) { this.active = active; }
     public void setOrders(List<SalesOrder> orders) { this.orders = orders; }
 
+    /** Trả về mã và tên khách hàng để hiển thị trong ComboBox. */
     @Override
     public String toString() {
         return customerCode + " - " + fullName;
     }
 
+    /** So sánh hai khách hàng dựa trên ID. */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,6 +74,7 @@ public class Customer {
         return id != null && Objects.equals(id, that.id);
     }
 
+    /** Trả về hash code đồng nhất với equals. */
     @Override
     public int hashCode() {
         return getClass().hashCode();

@@ -8,8 +8,10 @@ public class OrderLineInput {
     private int quantity;
     private BigDecimal unitPrice;
 
+    /** Constructor mặc định không tham số. */
     public OrderLineInput() {}
 
+    /** Constructor tạo một dòng đơn hàng với đầy đủ thông tin. */
     public OrderLineInput(Long productId, Long recipeId, int quantity, BigDecimal unitPrice) {
         this.productId = productId;
         this.recipeId = recipeId;
