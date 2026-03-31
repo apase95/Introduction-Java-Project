@@ -15,16 +15,19 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientDAO = ingredientDAO;
     }
 
+    /** Lấy toàn bộ danh sách nguyên liệu từ CSDL. */
     @Override
     public List<Ingredient> getAllIngredients() {
         return ingredientDAO.findAll();
     }
 
+    /** Tìm nguyên liệu theo ID, trả null nếu không tìm thấy. */
     @Override
     public Ingredient getIngredientById(Long id) {
         return ingredientDAO.findById(id).orElse(null);
     }
 
+    /** Tạo mới nguyên liệu sau khi kiểm tra dữ liệu đầu vào. */
     @Override
     public Ingredient createIngredient(String code, String name, String unit, BigDecimal stock, boolean active) {
         if (code == null || code.trim().isEmpty()) throw new IllegalArgumentException("Mã nguyên liệu không được để trống");
@@ -40,6 +43,7 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientDAO.save(i);
     }
 
+    /** Cập nhật thông tin nguyên liệu theo ID sau khi kiểm tra hợp lệ. */
     @Override
     public Ingredient updateIngredient(Long id, String code, String name, String unit, BigDecimal stock, boolean active) {
         if (id == null) throw new IllegalArgumentException("ID không hợp lệ");
@@ -58,11 +62,13 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientDAO.save(i);
     }
 
+    /** Xóa nguyên liệu theo ID. */
     @Override
     public void deleteIngredient(Long id) {
         ingredientDAO.delete(id);
     }
 
+    /** Tìm kiếm nguyên liệu theo từ khóa trong tên hoặc mã (không phân biệt hoa thường). */
     @Override
     public List<Ingredient> searchIngredients(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) return getAllIngredients();

@@ -32,31 +32,37 @@ public class LookupServiceImpl implements LookupService {
         this.recipeDAO = recipeDAO;
     }
 
+    /** Lấy danh sách khách hàng từ DAO. */
     @Override
     public List<Customer> getAllCustomers() {
         return customerDAO.findAll();
     }
 
+    /** Lấy danh sách sản phẩm từ DAO. */
     @Override
     public List<Product> getAllProducts() {
         return productDAO.findAll();
     }
 
+    /** Lấy danh sách danh mục từ DAO. */
     @Override
     public List<Category> getAllCategories() {
         return categoryDAO.findAll();
     }
 
+    /** Lấy danh sách bàn ăn từ DAO. */
     @Override
     public List<DiningTable> getAllDiningTables() {
         return diningTableDAO.findAll();
     }
 
+    /** Lấy danh sách nguyên liệu từ DAO. */
     @Override
     public List<Ingredient> getAllIngredients() {
         return ingredientDAO.findAll();
     }
 
+    /** Lấy danh sách công thức theo ID sản phẩm từ DAO. */
     @Override
     public List<Recipe> getRecipesByProductId(Long productId) {
         return recipeDAO.findByProductId(productId);

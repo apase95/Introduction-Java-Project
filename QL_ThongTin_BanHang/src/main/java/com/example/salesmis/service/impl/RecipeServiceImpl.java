@@ -23,11 +23,13 @@ public class RecipeServiceImpl implements RecipeService {
         this.productDAO = productDAO;
     }
 
+    /** Lấy danh sách công thức của một sản phẩm. */
     @Override
     public List<Recipe> getRecipesByProduct(Long productId) {
         return recipeDAO.findByProductId(productId);
     }
 
+    /** Lưu hoặc cập nhật công thức, gắn kết với sản phẩm tương ứng. */
     @Override
     public Recipe saveRecipe(Long productId, Recipe recipe) {
         if (recipe.getVariationName() == null || recipe.getVariationName().isBlank()) {
@@ -39,11 +41,13 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeDAO.save(recipe);
     }
 
+    /** Xóa công thức theo ID. */
     @Override
     public void deleteRecipe(Long recipeId) {
         recipeDAO.delete(recipeId);
     }
 
+    /** Thêm nguyên liệu vào công thức; cập nhật số lượng nếu đã tồn tại. */
     @Override
     public Recipe addIngredientToRecipe(Long recipeId, Long ingredientId, BigDecimal quantity) {
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) <= 0) {
@@ -70,6 +74,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeDAO.save(recipe);
     }
 
+    /** Xóa một nguyên liệu khỏi công thức; bỏ qua nếu không tìm thấy. */
     @Override
     public void removeIngredientFromRecipe(Long recipeId, Long ingredientId) {
         Recipe recipe = recipeDAO.findById(recipeId)
@@ -89,11 +94,13 @@ public class RecipeServiceImpl implements RecipeService {
         }
     }
 
+    /** Lấy toàn bộ danh sách nguyên liệu. */
     @Override
     public List<Ingredient> getAllIngredients() {
         return ingredientDAO.findAll();
     }
 
+    /** Lưu nguyên liệu sau khi kiểm tra mã và tên không được trống. */
     @Override
     public Ingredient saveIngredient(Ingredient ingredient) {
         if (ingredient.getIngredientCode() == null || ingredient.getIngredientCode().isBlank()) {
@@ -105,6 +112,7 @@ public class RecipeServiceImpl implements RecipeService {
         return ingredientDAO.save(ingredient);
     }
 
+    /** Xóa nguyên liệu theo ID. */
     @Override
     public void deleteIngredient(Long ingredientId) {
         ingredientDAO.delete(ingredientId);

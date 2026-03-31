@@ -20,6 +20,7 @@ public class ProductServiceImpl implements ProductService {
     @Override public List<Product> getAllProducts() { return productDAO.findAll(); }
     @Override public Product getProductById(Long id) { return productDAO.findById(id).orElse(null); }
 
+    /** Tạo mới sản phẩm và gắn danh mục nếu được chứ định. */
     @Override
     public Product createProduct(String sku, String name, Long categoryId, BigDecimal price, int stock, boolean active) {
         Category category = null;
@@ -37,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
         return productDAO.save(p);
     }
 
+    /** Cập nhật thông tin sản phẩm; ném ngoại lệ nếu không tìm thấy. */
     @Override
     public Product updateProduct(Long id, String sku, String name, Long categoryId, BigDecimal price, int stock, boolean active) {
         Product p = productDAO.findById(id).orElseThrow(() -> new IllegalArgumentException("Không tìm thấy sản phẩm"));

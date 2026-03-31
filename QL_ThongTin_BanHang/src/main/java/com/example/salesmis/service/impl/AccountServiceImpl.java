@@ -11,10 +11,12 @@ public class AccountServiceImpl implements AccountService {
     
     private final AccountDAO accountDAO;
 
+    /** Constructor nhận AccountDAO từ bên ngoài (dependency injection thủ công). */
     public AccountServiceImpl(AccountDAO accountDAO) {
         this.accountDAO = accountDAO;
     }
 
+    /** Xác thực tên đăng nhập và mật khẩu; ném ngoại lệ nếu sai. */
     @Override
     public Account login(String username, String password) {
         Optional<Account> accOpt = accountDAO.findByUsername(username);
@@ -30,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
         return acc;
     }
 
+    /** Tạo tài khoản mới; ném ngoại lệ nếu tên đăng nhập đã tồn tại. */
     @Override
     public Account createAccount(String username, String password, AccountRole role) {
         if (accountDAO.findByUsername(username).isPresent()) {
@@ -39,6 +42,7 @@ public class AccountServiceImpl implements AccountService {
         return accountDAO.save(acc);
     }
 
+    /** Tạo tài khoản admin và staff mặc định khi khởi động lần đầu. */
     @Override
     public void ensureDefaultAccountsExist() {
         if (accountDAO.findByUsername("admin").isEmpty()) {

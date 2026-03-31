@@ -28,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private final DiningTableDAO diningTableDAO;
     private final RecipeDAO recipeDAO;
 
+    /** Constructor nhận các DAO cần thiết từ bên ngoài (dependency injection). */
     public OrderServiceImpl(SalesOrderDAO salesOrderDAO, CustomerDAO customerDAO, ProductDAO productDAO, DiningTableDAO diningTableDAO, RecipeDAO recipeDAO) {
         this.salesOrderDAO = salesOrderDAO;
         this.customerDAO = customerDAO;
@@ -36,22 +37,26 @@ public class OrderServiceImpl implements OrderService {
         this.recipeDAO = recipeDAO;
     }
 
+    /** Lấy toàn bộ danh sách đơn hàng. */
     @Override
     public List<SalesOrder> getAllOrders() {
         return salesOrderDAO.findAll();
     }
+    /** Tìm kiếm đơn hàng; trả toàn bộ nếu từ khóa trống. */
     @Override
     public List<SalesOrder> searchOrders(String keyword) {
         if (keyword == null || keyword.isBlank()) return salesOrderDAO.findAll();
         return salesOrderDAO.searchByKeyword(keyword.trim());
     }
 
+    /** Lấy đơn hàng theo ID; ném ngoại lệ nếu không tìm thấy. */
     @Override
     public SalesOrder getOrderById(Long id) {
         return salesOrderDAO.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng id = " + id));
     }
 
+    /** Tạo mới đơn hàng: validate, kết nối thực thể, trừ kho (nếu COMPLETED), tính tổng tiền. */
     @Override
     public SalesOrder createOrder(String orderNo, LocalDate orderDate, Long customerId, Long tableId,
                                   OrderStatus status, String note, List<OrderLineInput> lines) {
@@ -124,6 +129,7 @@ public class OrderServiceImpl implements OrderService {
         return salesOrderDAO.save(order);
     }
 
+    /** Cập nhật đơn hàng: hoàn kho cũ, trừ kho mới (nếu COMPLETED), thay thế toàn bộ chi tiết. */
     @Override
     public SalesOrder updateOrder(Long id, String orderNo, LocalDate orderDate, Long customerId, Long tableId,
                                   OrderStatus status, String note, List<OrderLineInput> lines) {
@@ -209,6 +215,7 @@ public class OrderServiceImpl implements OrderService {
         return salesOrderDAO.update(existing);
     }
 
+    /** Xóa đơn hàng đã COMPLETED: hoàn trả tồn kho các sản phẩm rồi xóa. */
     @Override
     public void deleteOrder(Long id) {
         SalesOrder existing = getOrderById(id);
@@ -229,6 +236,7 @@ public class OrderServiceImpl implements OrderService {
         salesOrderDAO.deleteById(id);
     }
 
+    /** Xác thực các trường bắt buộc của đơn hàng; ném ngoại lệ nếu dữ liệu thiếu hoặc không hợp lệ. */
     private void validate(String orderNo, LocalDate orderDate, Long customerId, List<OrderLineInput> lines) {
         if (orderNo == null || orderNo.isBlank()) throw new IllegalArgumentException("Order No không được trống.");
         if (orderDate == null) throw new IllegalArgumentException("Ngày đơn hàng không được trống.");

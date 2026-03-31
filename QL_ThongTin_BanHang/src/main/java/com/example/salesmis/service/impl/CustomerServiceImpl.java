@@ -8,6 +8,7 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerDAO customerDAO;
 
+    /** Constructor nhận CustomerDAO từ bên ngoài (dependency injection). */
     public CustomerServiceImpl(CustomerDAO customerDAO) {
         this.customerDAO = customerDAO;
     }
@@ -18,6 +19,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override public void deleteCustomer(Long id) { customerDAO.delete(id); }
     @Override public List<Customer> searchCustomers(String keyword) { return customerDAO.searchByKeyword(keyword); }
 
+    /** Tạo khách vãng lai (mã KVL01) nếu chưa tồn tại, dùng cho đơn hàng không có khách cụ thể. */
     @Override
     public Customer ensureDefaultCustomer() {
         return customerDAO.findAll().stream()
