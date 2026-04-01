@@ -50,6 +50,16 @@ The most advanced project in this repository, handling complex `N:M` relationshi
   - Demonstrates how to enroll and unenroll students from courses using JPA entity lifecycle management.
   - Integrates advanced JPQL queries to filter students by their enrolled courses.
 
+### 5. Sales MIS (Coffee Shop POS & Inventory) - The Capstone Project
+This is the ultimate capstone project that integrates all previous knowledge into a complete, real-world application for the F&B industry.
+- **Goal:** Build a comprehensive Point of Sale (POS) and Bill of Materials (BOM) inventory system.
+- **Key Features:**
+  - **Layered Architecture + MVC:** Fully decoupled layers using Constructor-based Dependency Injection.
+  - **Auto Inventory Management:** Deducts raw ingredients (e.g., coffee beans, milk) based on multi-level recipes (Size M, Size L) when a product is sold.
+  - **Performance Optimization:** Solves the JPA N+1 Query problem using `JOIN FETCH` and implements **JPQL DTO Projections** to generate 15+ complex reports without overloading RAM.
+  - **Transaction Management:** Strict `try-catch-rollback` mechanisms in the Service layer to ensure ACID properties during checkout.
+  - **PDF Export:** Integrates the `iText` library to generate professional invoices.
+
 ---
 
 ## 🚀 How to Run the Projects
