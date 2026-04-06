@@ -2,6 +2,7 @@ package com.example.salesmis.service;
 
 import com.example.salesmis.model.entity.Ingredient;
 import com.example.salesmis.model.entity.Recipe;
+import com.example.salesmis.model.entity.Product;
 import java.util.List;
 
 public interface RecipeService {
@@ -23,4 +24,7 @@ public interface RecipeService {
     Ingredient saveIngredient(Ingredient ingredient);
     /** Xóa nguyên liệu theo ID. */
     void deleteIngredient(Long ingredientId);
+
+    /** Cập nhật đường dẫn hình ảnh của sản phẩm. */
+    Product updateProductImagePath(Long productId, String imagePath);
 }

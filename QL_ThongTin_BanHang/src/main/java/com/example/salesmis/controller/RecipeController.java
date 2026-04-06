@@ -73,4 +73,9 @@ public class RecipeController {
     public void deleteIngredient(Long id) {
         recipeService.deleteIngredient(id);
     }
+
+    /** Cập nhật đường dẫn hình ảnh của sản phẩm. */
+    public void updateProductImage(Long productId, String imagePath) {
+        recipeService.updateProductImagePath(productId, imagePath);
+    }
 }

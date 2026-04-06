@@ -30,6 +30,25 @@ public class RecipeManagementPanel extends JPanel {
     private JComboBox<Ingredient> cboIngredient;
     private JTextField txtQuantity;
 
+    // Hình ảnh sản phẩm
+    private JLabel lblImagePreview;
+    private JComboBox<String> cboImageFile;
+
+    // Danh sách file ảnh có sẵn trong resources/images
+    private static final String[] AVAILABLE_IMAGES = {
+        "default.png",
+        "bac-xiu.png",
+        "cf_sua.png",
+        "matcha-da-xay.png",
+        "sinh-to-bo.png",
+        "sinh-to-dau.png",
+        "socola-da-xay.png",
+        "tra-dao-cam-xa.jpg",
+        "tra-sua-Oolong.png",
+        "tra-sua-tran-chau.png",
+        "tra-vai-hat-chia.png"
+    };
+
     public RecipeManagementPanel(RecipeController recipeController) {
         this.recipeController = recipeController;
         initComponents();
@@ -41,22 +60,24 @@ public class RecipeManagementPanel extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-        // Let's divide into Left (Product Selection) and Right (Recipe & Ingredients)
+        // Chia làm 2: Left (Sản phẩm + Ảnh) và Right (Công thức + Nguyên liệu)
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, buildProductPanel(), buildRightPanel());
-        splitPane.setDividerLocation(300);
+        splitPane.setDividerLocation(320);
         add(splitPane, BorderLayout.CENTER);
     }
 
     private JPanel buildProductPanel() {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
-        panel.setBorder(BorderFactory.createTitledBorder("1. Chọn Sản phẩm"));
+        panel.setBorder(BorderFactory.createTitledBorder("1. Chọn Sản phẩm & Hình ảnh"));
 
+        // Thanh tìm kiếm
         JPanel searchPanel = new JPanel(new BorderLayout());
         txtSearchProduct = new JTextField();
         txtSearchProduct.addActionListener(e -> filterProducts());
         searchPanel.add(new JLabel("Tìm kiếm (Enter): "), BorderLayout.WEST);
         searchPanel.add(txtSearchProduct, BorderLayout.CENTER);
 
+        // Danh sách sản phẩm
         productListModel = new DefaultListModel<>();
         listProducts = new JList<>(productListModel);
         listProducts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -65,18 +86,122 @@ public class RecipeManagementPanel extends JPanel {
                 Product p = listProducts.getSelectedValue();
                 if (p != null) {
                     loadRecipes(p.getId());
+                    updateImagePreview(p);
                 } else {
                     recipeTableModel.setRowCount(0);
                     clearRecipeForm();
                     ingredientTableModel.setRowCount(0);
+                    clearImagePreview();
                 }
             }
         });
 
+        // Panel ảnh sản phẩm
+        JPanel imagePanel = buildImagePanel();
+
         panel.add(searchPanel, BorderLayout.NORTH);
         panel.add(new JScrollPane(listProducts), BorderLayout.CENTER);
+        panel.add(imagePanel, BorderLayout.SOUTH);
 
         return panel;
+    }
+
+    private JPanel buildImagePanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setBorder(BorderFactory.createTitledBorder("Hình ảnh Sản phẩm"));
+        panel.setPreferredSize(new Dimension(0, 230));
+
+        // Preview ảnh
+        lblImagePreview = new JLabel("(Chọn sản phẩm để xem ảnh)", SwingConstants.CENTER);
+        lblImagePreview.setPreferredSize(new Dimension(150, 150));
+        lblImagePreview.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        lblImagePreview.setBackground(new Color(248, 248, 248));
+        lblImagePreview.setOpaque(true);
+        lblImagePreview.setFont(new Font("Arial", Font.ITALIC, 11));
+        lblImagePreview.setForeground(Color.GRAY);
+        panel.add(lblImagePreview, BorderLayout.CENTER);
+
+        // Phần chọn và cập nhật ảnh
+        JPanel updatePanel = new JPanel(new BorderLayout(4, 4));
+        updatePanel.setBorder(BorderFactory.createEmptyBorder(4, 0, 0, 0));
+
+        cboImageFile = new JComboBox<>(AVAILABLE_IMAGES);
+        cboImageFile.setFont(new Font("Arial", Font.PLAIN, 11));
+
+        JButton btnUpdateImage = new JButton("Cập nhật Ảnh");
+        btnUpdateImage.setFont(new Font("Arial", Font.BOLD, 12));
+        btnUpdateImage.setBackground(new Color(0, 120, 215));
+        btnUpdateImage.setForeground(Color.WHITE);
+        btnUpdateImage.setOpaque(true);
+        btnUpdateImage.addActionListener(e -> saveProductImage());
+
+        updatePanel.add(new JLabel("Chọn ảnh:"), BorderLayout.WEST);
+        updatePanel.add(cboImageFile, BorderLayout.CENTER);
+        updatePanel.add(btnUpdateImage, BorderLayout.EAST);
+
+        panel.add(updatePanel, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void updateImagePreview(Product p) {
+        String imgPath = p.getImagePath();
+        if (imgPath == null || imgPath.trim().isEmpty()) {
+            imgPath = "default.png";
+        }
+
+        // Chọn đúng item trong combobox
+        for (int i = 0; i < cboImageFile.getItemCount(); i++) {
+            if (cboImageFile.getItemAt(i).equals(imgPath)) {
+                cboImageFile.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        // Load và scale ảnh
+        try {
+            java.net.URL imgUrl = getClass().getResource("/images/" + imgPath);
+            if (imgUrl != null) {
+                ImageIcon icon = new ImageIcon(imgUrl);
+                Image img = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+                lblImagePreview.setIcon(new ImageIcon(img));
+                lblImagePreview.setText(null);
+            } else {
+                lblImagePreview.setIcon(null);
+                lblImagePreview.setText("[Không tìm thấy: " + imgPath + "]");
+            }
+        } catch (Exception ex) {
+            lblImagePreview.setIcon(null);
+            lblImagePreview.setText("[Lỗi tải ảnh]");
+        }
+    }
+
+    private void clearImagePreview() {
+        lblImagePreview.setIcon(null);
+        lblImagePreview.setText("(Chọn sản phẩm để xem ảnh)");
+        if (cboImageFile.getItemCount() > 0) {
+            cboImageFile.setSelectedIndex(0);
+        }
+    }
+
+    private void saveProductImage() {
+        Product p = listProducts.getSelectedValue();
+        if (p == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm trước.", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String selectedImage = (String) cboImageFile.getSelectedItem();
+        if (selectedImage == null) return;
+
+        try {
+            recipeController.updateProductImage(p.getId(), selectedImage);
+            // Cập nhật in-memory và refresh preview
+            p.setImagePath(selectedImage);
+            updateImagePreview(p);
+            JOptionPane.showMessageDialog(this, "Đã cập nhật hình ảnh sản phẩm \"" + p.getProductName() + "\" thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi cập nhật ảnh: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JPanel buildRightPanel() {

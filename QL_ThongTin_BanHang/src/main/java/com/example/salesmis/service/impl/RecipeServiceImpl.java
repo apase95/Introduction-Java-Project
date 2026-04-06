@@ -117,4 +117,13 @@ public class RecipeServiceImpl implements RecipeService {
     public void deleteIngredient(Long ingredientId) {
         ingredientDAO.delete(ingredientId);
     }
+
+    /** Cập nhật đường dẫn hình ảnh của sản phẩm theo ID. */
+    @Override
+    public Product updateProductImagePath(Long productId, String imagePath) {
+        Product product = productDAO.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại."));
+        product.setImagePath(imagePath);
+        return productDAO.save(product);
+    }
 }
