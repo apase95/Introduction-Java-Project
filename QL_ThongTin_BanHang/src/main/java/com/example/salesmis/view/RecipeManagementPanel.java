@@ -128,16 +128,16 @@ public class RecipeManagementPanel extends JPanel {
         cboImageFile = new JComboBox<>(AVAILABLE_IMAGES);
         cboImageFile.setFont(new Font("Arial", Font.PLAIN, 11));
 
-        JButton btnUpdateImage = new JButton("Cập nhật Ảnh");
-        btnUpdateImage.setFont(new Font("Arial", Font.BOLD, 12));
-        btnUpdateImage.setBackground(new Color(0, 120, 215));
-        btnUpdateImage.setForeground(Color.WHITE);
-        btnUpdateImage.setOpaque(true);
-        btnUpdateImage.addActionListener(e -> saveProductImage());
+        // JButton btnUpdateImage = new JButton("Cập nhật Ảnh");
+        // btnUpdateImage.setFont(new Font("Arial", Font.BOLD, 12));
+        // btnUpdateImage.setBackground(new Color(0, 120, 215));
+        // btnUpdateImage.setForeground(Color.WHITE);
+        // btnUpdateImage.setOpaque(true);
+        // btnUpdateImage.addActionListener(e -> saveProductImage());
 
-        updatePanel.add(new JLabel("Chọn ảnh:"), BorderLayout.WEST);
-        updatePanel.add(cboImageFile, BorderLayout.CENTER);
-        updatePanel.add(btnUpdateImage, BorderLayout.EAST);
+        // updatePanel.add(new JLabel("Chọn ảnh:"), BorderLayout.WEST);
+        // updatePanel.add(cboImageFile, BorderLayout.CENTER);
+        // updatePanel.add(btnUpdateImage, BorderLayout.EAST);
 
         panel.add(updatePanel, BorderLayout.SOUTH);
 
