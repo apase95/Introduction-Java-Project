@@ -23,17 +23,17 @@ INSERT INTO categories(category_code, category_name, active) VALUES
 -- ============================================================
 -- [Products] - 10 sản phẩm (id 1-10)
 -- ============================================================
-INSERT INTO products(sku, product_name, category_id, unit_price, stock_qty, active) VALUES
-('P001', 'Cà Phê Sữa Đá',         1, 29000, 100, TRUE),  -- id 1
-('P002', 'Bạc Xỉu',               1, 29000, 100, TRUE),  -- id 2
-('P003', 'Trà Sữa Trân Châu',      2, 45000, 150, TRUE),  -- id 3
-('P004', 'Trà Sữa Oolong',         2, 50000, 120, TRUE),  -- id 4
-('P005', 'Trà Đào Cam Sả',         3, 45000,  80, TRUE),  -- id 5
-('P006', 'Trà Vải Hạt Chia',       3, 45000,  90, TRUE),  -- id 6
-('P007', 'Sinh Tố Bơ',             4, 55000,  50, TRUE),  -- id 7
-('P008', 'Sinh Tố Dâu',            4, 55000,  60, TRUE),  -- id 8
-('P009', 'Matcha Đá Xay',          5, 60000,  40, TRUE),  -- id 9
-('P010', 'Cà Phê Đá Xay Caramel',  5, 65000,  45, TRUE); -- id 10
+INSERT INTO products(sku, product_name, category_id, unit_price, stock_qty, active, image_path) VALUES
+('P001', 'Cà Phê Sữa Đá',         1, 29000, 100, TRUE, 'cf_sua.png'),          -- id 1
+('P002', 'Bạc Xỉu',               1, 29000, 100, TRUE, 'bac-xiu.png'),         -- id 2
+('P003', 'Trà Sữa Trân Châu',      2, 45000, 150, TRUE, 'tra-sua-tran-chau.png'),-- id 3
+('P004', 'Trà Sữa Oolong',         2, 50000, 120, TRUE, 'tra-sua-Oolong.png'),   -- id 4
+('P005', 'Trà Đào Cam Sả',         3, 45000,  80, TRUE, 'tra-dao-cam-xa.png'),   -- id 5
+('P006', 'Trà Vải Hạt Chia',       3, 45000,  90, TRUE, 'tra-vai-hat-chia.png'), -- id 6
+('P007', 'Sinh Tố Bơ',             4, 55000,  50, TRUE, 'sinh-to-bo.png'),       -- id 7
+('P008', 'Sinh Tố Dâu',            4, 55000,  60, TRUE, 'sinh-to-dau.png'),      -- id 8
+('P009', 'Matcha Đá Xay',          5, 60000,  40, TRUE, 'matcha-da-xay.png'),    -- id 9
+('P010', 'Cà Phê Đá Xay Caramel',  5, 65000,  45, TRUE, 'socola-da-xay.png');    -- id 10
 
 -- ============================================================
 -- [Zones] - 3 khu vực

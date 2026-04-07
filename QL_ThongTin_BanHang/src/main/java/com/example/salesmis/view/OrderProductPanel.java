@@ -90,7 +90,7 @@ public class OrderProductPanel extends JPanel {
 
         // Center: Danh sách sản phẩm
         JPanel pnlRight = new JPanel(new BorderLayout(5, 5));
-        pnlRight.setBorder(BorderFactory.createTitledBorder("Danh Sách Sản Phẩm (Click đúp vào sản phẩm)"));
+        pnlRight.setBorder(BorderFactory.createTitledBorder("Danh Sách Sản Phẩm"));
 
         pnlProductGrid = new JPanel(new GridLayout(0, 2, 10, 10)); // 2 columns exactly
         pnlProductGrid.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

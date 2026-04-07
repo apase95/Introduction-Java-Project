@@ -43,7 +43,7 @@ public class RecipeManagementPanel extends JPanel {
         "sinh-to-bo.png",
         "sinh-to-dau.png",
         "socola-da-xay.png",
-        "tra-dao-cam-xa.jpg",
+        "tra-dao-cam-xa.png",
         "tra-sua-Oolong.png",
         "tra-sua-tran-chau.png",
         "tra-vai-hat-chia.png"
