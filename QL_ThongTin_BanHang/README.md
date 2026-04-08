@@ -51,6 +51,7 @@ Run the application by executing the AppLauncher.java file. The application uses
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6846ce88-b532-461f-93a4-98402367f6cc" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ef43e88b-563d-407b-a8bd-d92fc33418d8" />
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c4ec834b-9e43-4ef5-ae8d-3c1968db555e" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c915fb92-e079-49b4-b1d7-5e1ca0191550" />
 
 
 ### ⚙️ Advanced JPA & Architecture Highlights
