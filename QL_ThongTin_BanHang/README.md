@@ -48,6 +48,11 @@ Run the application by executing the AppLauncher.java file. The application uses
 - **Admin Role:** Username: admin | Password: 123456 (Full access including Reports & Ingredients)
 - **Staff Role:** Username: staff | Password: 123456 (Access limited to POS and Orders)
 
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/6846ce88-b532-461f-93a4-98402367f6cc" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/ef43e88b-563d-407b-a8bd-d92fc33418d8" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c4ec834b-9e43-4ef5-ae8d-3c1968db555e" />
+
+
 ### ⚙️ Advanced JPA & Architecture Highlights
 Unlike basic CRUD applications, this project implements enterprise-level database interaction techniques:
 - Solving N+1 Query Problem: Instead of relying on default Lazy Fetching which executes hundreds of hidden queries, the DAOs use JOIN FETCH in JPQL to load Orders, Customers, and OrderDetails in a single, highly optimized query.
