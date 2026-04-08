@@ -38,6 +38,8 @@ Update the `persistence.xml` file with your MySQL credentials. Modify the follow
 ### 3. Launch the Application
 Run the application by executing the `MainApp.java` file. The Swing interface will be safely launched on the Event Dispatch Thread (EDT) using `SwingUtilities.invokeLater`
 
+<img width="1235" height="743" alt="image" src="https://github.com/user-attachments/assets/c1cefad2-db4d-4525-b174-0a605a6d171a" />
+
 ## ⚙️ JPA Configurations (`persistence.xml`)
 You can customize how Hibernate interacts with the database by modifying properties in the `persistence.xml`.
 ```xml
