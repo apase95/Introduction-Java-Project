@@ -67,7 +67,7 @@ This is the ultimate capstone project that integrates all previous knowledge int
 ### 1. **Clone the repository:**
 ```bash
 git clone https://github.com/apase95/Introduction-Java-Project.git
-cd Introduction-Java-Project/any-projectproject
+cd Introduction-Java-Project/any-project
 ```
 
 ### 2. **Database Setup:**
